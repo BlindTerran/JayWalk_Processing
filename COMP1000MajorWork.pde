@@ -28,6 +28,7 @@ float ed2;
 float ed3;
 float ed4;
 float bd;
+float s;
 
 void setup() {
   
@@ -47,32 +48,33 @@ void setup() {
   ed4 = width/27;
   bd = width/32;
   
-  line(0, height/4, width, height/4);
-  
 }
 
 void draw() {
   
   vehicle();
+  lane();
 
 }
 
 void vehicle() {
-
-  n1 = n1 + 1;
-  b1 = b1 + 1; 
-  b2 = b2 + 1;
-  b3 = b3 + 1;
-  b4 = b4 + 1;
-  eu1 = eu1 + 1;
-  eu2 = eu2 + 1;
-  eu3 = eu3 + 1;
-  eu4 = eu4 + 1;
-  ed1 = ed1 + 1;
-  ed2 = ed2 + 1;
-  ed3 = ed3 + 1;
-  ed4 = ed4 + 1;
-  bd = bd + 1;
+  
+  s = 1;                                                                                  //speed of vehicle
+  
+  n1 = n1 + s;
+  b1 = b1 + s; 
+  b2 = b2 + s;
+  b3 = b3 + s;
+  b4 = b4 + s;
+  eu1 = eu1 + s;
+  eu2 = eu2 + s;
+  eu3 = eu3 + s;
+  eu4 = eu4 + s;
+  ed1 = ed1 + s;
+  ed2 = ed2 + s;
+  ed3 = ed3 + s;
+  ed4 = ed4 + s;
+  bd = bd + s;
   
   background(150);
   fill(#DE4881);
@@ -85,6 +87,11 @@ void vehicle() {
   rectMode(CORNER);
   rect(bd, height/12, width/27, height/20);                                                //body
  
- 
+}
 
+
+void lane(){
+  
+    line(0, height/4, width, height/4);
+    
 }
