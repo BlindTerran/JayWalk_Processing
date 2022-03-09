@@ -33,20 +33,20 @@ float s;
 void setup() {
   
   size(1200, 400);
-  n1 = width/32+width/27;
-  b1 = width/37;
-  b2 = width/32;
-  b3 = width/32;
-  b4 = width/37;
-  eu1 = width/28;
-  eu2 = width/25;
-  eu3 = width/20;
-  eu4 = width/27;
-  ed1 = width/28;
-  ed2 = width/25;
-  ed3 = width/20;
-  ed4 = width/27;
-  bd = width/32;
+  n1 = width/32+width/27 - 120;
+  b1 = width/37 - 120;
+  b2 = width/32 - 120;
+  b3 = width/32 - 120;
+  b4 = width/37 - 120;
+  eu1 = width/28 - 120;
+  eu2 = width/25 - 120;
+  eu3 = width/20 - 120;
+  eu4 = width/27 - 120;
+  ed1 = width/28 - 120;
+  ed2 = width/25 - 120;
+  ed3 = width/20 - 120;
+  ed4 = width/27 - 120;
+  bd = width/32 - 120;
   
 }
 
