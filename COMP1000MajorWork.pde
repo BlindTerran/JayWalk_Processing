@@ -14,39 +14,39 @@ final int MIN_GAP = 50;
 final int MAX_LIVES = 3;
 final int WIN_SCORE = 10;
 
-float n1;
-float b1;
-float b2;
-float b3;
-float b4;
-float eu1;
-float eu2;
-float eu3;
-float eu4;
-float ed1;
-float ed2;
-float ed3;
-float ed4;
-float bd;
-float s;
+float noseX1;
+float blastX1;
+float blastX2;
+float blastX3;
+float blastX4;
+float upperSurfaceX1;
+float upperSurfaceX2;
+float upperSurfaceX3;
+float upperSurfaceX4;
+float lowerSurfaceX1;
+float lowerSurfaceX2;
+float lowerSurfaceX3;
+float lowerSurfaceX4;
+float bodyX1;
+float speed;
 
 void setup() {
   
   size(1200, 400);
-  n1 = width/32+width/27 - 120;
-  b1 = width/37 - 120;
-  b2 = width/32 - 120;
-  b3 = width/32 - 120;
-  b4 = width/37 - 120;
-  eu1 = width/28 - 120;
-  eu2 = width/25 - 120;
-  eu3 = width/20 - 120;
-  eu4 = width/27 - 120;
-  ed1 = width/28 - 120;
-  ed2 = width/25 - 120;
-  ed3 = width/20 - 120;
-  ed4 = width/27 - 120;
-  bd = width/32 - 120;
+  noseX1 = (width/32+width/27) - width/10;
+  blastX1 = width/37 - width/10;
+  blastX2 = width/32 - width/10;
+  blastX3 = width/32 - width/10;
+  blastX4 = width/37 - width/10;
+  upperSurfaceX1 = width/28 - width/10;
+  upperSurfaceX2 = width/25 - width/10;
+  upperSurfaceX3 = width/20 - width/10;
+  upperSurfaceX4 = width/27 - width/10;
+  lowerSurfaceX1 = width/28 - width/10;
+  lowerSurfaceX2 = width/25 - width/10;
+  lowerSurfaceX3 = width/20 - width/10;
+  lowerSurfaceX4 = width/27 - width/10;
+  bodyX1 = width/32 - width/10;
   
 }
 
@@ -59,34 +59,35 @@ void draw() {
 
 void vehicle() {
   
-  s = 1;                                                                                  //speed of vehicle
+  speed = 1;                                                                                  //speed of vehicle
   
-  n1 = n1 + s;
-  b1 = b1 + s; 
-  b2 = b2 + s;
-  b3 = b3 + s;
-  b4 = b4 + s;
-  eu1 = eu1 + s;
-  eu2 = eu2 + s;
-  eu3 = eu3 + s;
-  eu4 = eu4 + s;
-  ed1 = ed1 + s;
-  ed2 = ed2 + s;
-  ed3 = ed3 + s;
-  ed4 = ed4 + s;
-  bd = bd + s;
+  noseX1 = noseX1 + speed;
+  blastX1 = blastX1 + speed; 
+  blastX2 = blastX2 + speed;
+  blastX3 = blastX3 + speed;
+  blastX4 = blastX4 + speed;
+  upperSurfaceX1 = upperSurfaceX1 + speed;
+  upperSurfaceX2 = upperSurfaceX2 + speed;
+  upperSurfaceX3 = upperSurfaceX3 + speed;
+  upperSurfaceX4 = upperSurfaceX4 + speed;
+  lowerSurfaceX1 = lowerSurfaceX1 + speed;
+  lowerSurfaceX2 = lowerSurfaceX2 + speed;
+  lowerSurfaceX3 = lowerSurfaceX3 + speed;
+  lowerSurfaceX4 = lowerSurfaceX4 + speed;
+  bodyX1 = bodyX1 + speed;
   
   background(150);
   fill(#DE4881);
-  ellipse(n1, height/12+height/40, width/25, height/20);                                   //nose cone
+  ellipse(noseX1, height/12+height/40, width/25, height/20);                                   //nose cone
   fill(150);
-  quad(b1, height/10.5, b2, height/12, b3, height/12+height/20, b4, height/8.5);           //blast
-  quad(eu1, height/18, eu2, height/18, eu3, height/12, eu4, height/12);                    //external control surface(up)
-  quad(ed1, height/6, ed2, height/6, ed3, height/12+height/20, ed4, height/12+height/20);  //external control surface(down)
+  quad(blastX1, height/10.5, blastX2, height/12, blastX3, height/12+height/20, blastX4, height/8.5);           //blast
+  quad(upperSurfaceX1, height/18, upperSurfaceX2, height/18, upperSurfaceX3, height/12, upperSurfaceX4, height/12);                    //upper surface
+  quad(lowerSurfaceX1, height/6, lowerSurfaceX2, height/6, lowerSurfaceX3, height/12+height/20, lowerSurfaceX4, height/12+height/20);  //lower surface
   fill(#518B01);
   rectMode(CORNER);
-  rect(bd, height/12, width/27, height/20);                                                //body
- 
+  rect(bodyX1, height/12, width/27, height/20);                                                //body
+  
+
 }
 
 
