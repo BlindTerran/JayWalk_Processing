@@ -59,7 +59,7 @@ void draw() {
 
 void vehicle() {
   
-  speed = 1;                                                                                  //speed of vehicle
+  speed = 1;                                            //speed of vehicle
   
   noseX1 = noseX1 + speed;
   blastX1 = blastX1 + speed; 
@@ -78,16 +78,32 @@ void vehicle() {
   
   background(150);
   fill(#DE4881);
-  ellipse(noseX1, height/12+height/40, width/25, height/20);                                   //nose cone
+  ellipse(noseX1, height/12+height/40, width/25, height/20);                                                                           //nose cone
   fill(150);
-  quad(blastX1, height/10.5, blastX2, height/12, blastX3, height/12+height/20, blastX4, height/8.5);           //blast
+  quad(blastX1, height/10.5, blastX2, height/12, blastX3, height/12+height/20, blastX4, height/8.5);                                   //blast
   quad(upperSurfaceX1, height/18, upperSurfaceX2, height/18, upperSurfaceX3, height/12, upperSurfaceX4, height/12);                    //upper surface
   quad(lowerSurfaceX1, height/6, lowerSurfaceX2, height/6, lowerSurfaceX3, height/12+height/20, lowerSurfaceX4, height/12+height/20);  //lower surface
   fill(#518B01);
   rectMode(CORNER);
-  rect(bodyX1, height/12, width/27, height/20);                                                //body
+  rect(bodyX1, height/12, width/27, height/20);                                                                                        //body
   
-
+  if(blastX4 > 1200){
+    noseX1 = (width/32+width/27) - width/10;
+    blastX1 = width/37 - width/10;
+    blastX2 = width/32 - width/10;
+    blastX3 = width/32 - width/10;
+    blastX4 = width/37 - width/10;
+    upperSurfaceX1 = width/28 - width/10;
+    upperSurfaceX2 = width/25 - width/10;
+    upperSurfaceX3 = width/20 - width/10;
+    upperSurfaceX4 = width/27 - width/10;
+    lowerSurfaceX1 = width/28 - width/10;
+    lowerSurfaceX2 = width/25 - width/10;
+    lowerSurfaceX3 = width/20 - width/10;
+    lowerSurfaceX4 = width/27 - width/10;
+    bodyX1 = width/32 - width/10;
+  
+  }
 }
 
 
