@@ -54,6 +54,7 @@ void draw() {
   
   vehicle();
   lane();
+  pedestrian();
 
 }
 
@@ -84,7 +85,6 @@ void vehicle() {
   quad(upperSurfaceX1, height/18, upperSurfaceX2, height/18, upperSurfaceX3, height/12, upperSurfaceX4, height/12);                    //upper surface
   quad(lowerSurfaceX1, height/6, lowerSurfaceX2, height/6, lowerSurfaceX3, height/12+height/20, lowerSurfaceX4, height/12+height/20);  //lower surface
   fill(#518B01);
-  rectMode(CORNER);
   rect(bodyX1, height/12, width/27, height/20);                                                                                        //body
   
   if(blastX4 > 1200){
@@ -106,6 +106,12 @@ void vehicle() {
   }
 }
 
+void pedestrian(){
+  rect(width/1.85, height/1.05, width/16.5, height/20);
+  fill(0, 408, 612);
+  textSize(width/100);
+  text("PEDESTRIAN", width/1.85, height/1.01);
+}
 
 void lane(){
   
