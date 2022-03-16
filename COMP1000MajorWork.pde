@@ -28,7 +28,11 @@ float lowerSurfaceX2;
 float lowerSurfaceX3;
 float lowerSurfaceX4;
 float bodyX1;
-float speed;
+float vehicleSpeed;
+float pedestrianRectX;
+float pedestrianRectY;
+float pedestrianTextX;
+float pedestrianTextY;
 
 void setup() {
   
@@ -47,7 +51,10 @@ void setup() {
   lowerSurfaceX3 = width/20 - width/10;
   lowerSurfaceX4 = width/27 - width/10;
   bodyX1 = width/32 - width/10;
-  
+  pedestrianRectX = width/1.85;
+  pedestrianRectY = height/1.05;
+  pedestrianTextX = width/1.85;
+  pedestrianTextY = height/1.01;
 }
 
 void draw() {
@@ -55,27 +62,46 @@ void draw() {
   vehicle();
   lane();
   pedestrian();
+  if (keyPressed){
+    if(key == 'A' || key == 'a'){
+      pedestrianRectX = pedestrianRectX - 3;
+      pedestrianTextX = pedestrianTextX - 3;
+    }
+    if(key == 'D' || key == 'd'){
+      pedestrianRectX = pedestrianRectX + 3;
+      pedestrianTextX = pedestrianTextX + 3;
+    }
+    if(key == 'W' || key =='w'){
+      pedestrianRectY = pedestrianRectY - 3;
+      pedestrianTextY = pedestrianTextY - 3;
+    }
+    if(key == 'S' || key == 's'){
+      pedestrianRectY = pedestrianRectY + 3;
+      pedestrianTextY = pedestrianTextY + 3;
+    }
+  }
+  
 
 }
 
 void vehicle() {
   
-  speed = 1;                                            //speed of vehicle
+  vehicleSpeed = 1;                                            //speed of vehicle
   
-  noseX1 = noseX1 + speed;
-  blastX1 = blastX1 + speed; 
-  blastX2 = blastX2 + speed;
-  blastX3 = blastX3 + speed;
-  blastX4 = blastX4 + speed;
-  upperSurfaceX1 = upperSurfaceX1 + speed;
-  upperSurfaceX2 = upperSurfaceX2 + speed;
-  upperSurfaceX3 = upperSurfaceX3 + speed;
-  upperSurfaceX4 = upperSurfaceX4 + speed;
-  lowerSurfaceX1 = lowerSurfaceX1 + speed;
-  lowerSurfaceX2 = lowerSurfaceX2 + speed;
-  lowerSurfaceX3 = lowerSurfaceX3 + speed;
-  lowerSurfaceX4 = lowerSurfaceX4 + speed;
-  bodyX1 = bodyX1 + speed;
+  noseX1 = noseX1 + vehicleSpeed;
+  blastX1 = blastX1 + vehicleSpeed; 
+  blastX2 = blastX2 + vehicleSpeed;
+  blastX3 = blastX3 + vehicleSpeed;
+  blastX4 = blastX4 + vehicleSpeed;
+  upperSurfaceX1 = upperSurfaceX1 + vehicleSpeed;
+  upperSurfaceX2 = upperSurfaceX2 + vehicleSpeed;
+  upperSurfaceX3 = upperSurfaceX3 + vehicleSpeed;
+  upperSurfaceX4 = upperSurfaceX4 + vehicleSpeed;
+  lowerSurfaceX1 = lowerSurfaceX1 + vehicleSpeed;
+  lowerSurfaceX2 = lowerSurfaceX2 + vehicleSpeed;
+  lowerSurfaceX3 = lowerSurfaceX3 + vehicleSpeed;
+  lowerSurfaceX4 = lowerSurfaceX4 + vehicleSpeed;
+  bodyX1 = bodyX1 + vehicleSpeed;
   
   background(150);
   fill(#DE4881);
@@ -107,14 +133,12 @@ void vehicle() {
 }
 
 void pedestrian(){
-  rect(width/1.85, height/1.05, width/16.5, height/20);
+  rect(pedestrianRectX, pedestrianRectY, width/16.5, height/20);
   fill(0, 408, 612);
   textSize(width/100);
-  text("PEDESTRIAN", width/1.85, height/1.01);
+  text("PEDESTRIAN", pedestrianTextX, pedestrianTextY);
 }
 
 void lane(){
-  
     line(0, height/4, width, height/4);
-    
 }
