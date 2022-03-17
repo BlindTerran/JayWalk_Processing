@@ -33,9 +33,9 @@ float pedestrianRectX;
 float pedestrianRectY;
 float pedestrianTextX;
 float pedestrianTextY;
+boolean isLeft, isRight, isUp, isDown;
 
 void setup() {
-  
   size(1200, 400);
   noseX1 = (width/32+width/27) - width/10;
   blastX1 = width/37 - width/10;
@@ -57,34 +57,13 @@ void setup() {
   pedestrianTextY = height/1.01;
 }
 
-void draw() {
-  
+void draw(){
   vehicle();
   lane();
   pedestrian();
-  if (keyPressed){
-    if(key == 'A' || key == 'a'){
-      pedestrianRectX = pedestrianRectX - 3;
-      pedestrianTextX = pedestrianTextX - 3;
-    }
-    if(key == 'D' || key == 'd'){
-      pedestrianRectX = pedestrianRectX + 3;
-      pedestrianTextX = pedestrianTextX + 3;
-    }
-    if(key == 'W' || key =='w'){
-      pedestrianRectY = pedestrianRectY - 3;
-      pedestrianTextY = pedestrianTextY - 3;
-    }
-    if(key == 'S' || key == 's'){
-      pedestrianRectY = pedestrianRectY + 3;
-      pedestrianTextY = pedestrianTextY + 3;
-    }
-  }
-  
-
 }
 
-void vehicle() {
+void vehicle(){
   
   vehicleSpeed = 1;                                            //speed of vehicle
   
@@ -113,7 +92,7 @@ void vehicle() {
   fill(#518B01);
   rect(bodyX1, height/12, width/27, height/20);                                                                                        //body
   
-  if(blastX4 > 1200){
+  if(blastX4 > width){
     noseX1 = (width/32+width/27) - width/10;
     blastX1 = width/37 - width/10;
     blastX2 = width/32 - width/10;
@@ -127,18 +106,65 @@ void vehicle() {
     lowerSurfaceX2 = width/25 - width/10;
     lowerSurfaceX3 = width/20 - width/10;
     lowerSurfaceX4 = width/27 - width/10;
-    bodyX1 = width/32 - width/10;
-  
+    bodyX1 = width/32 - width/10; 
   }
 }
+
+void lane(){
+  line(0, height/4, width, height/4);
+}
+
 
 void pedestrian(){
   rect(pedestrianRectX, pedestrianRectY, width/16.5, height/20);
   fill(0, 408, 612);
   textSize(width/100);
   text("PEDESTRIAN", pedestrianTextX, pedestrianTextY);
+
+  if(isLeft){
+    pedestrianRectX-= 3;
+    pedestrianTextX-= 3;
+  }
+  if(isRight){
+    pedestrianRectX+= 3;
+    pedestrianTextX+= 3;
+  }
+  if(isUp){
+    pedestrianRectY-= 3;
+    pedestrianTextY-= 3;
+  }
+  if(isDown){
+    pedestrianRectY+= 3;
+    pedestrianTextY+= 3;
+  }
 }
 
-void lane(){
-    line(0, height/4, width, height/4);
+void keyPressed(){
+    if(key == 'A' || key == 'a'){
+      isLeft = true;
+    }
+    if(key == 'D' || key == 'd'){
+      isRight = true;
+    }
+    if(key == 'W' || key =='w'){
+      isUp = true;
+    }
+    if(key == 'S' || key == 's'){
+      isDown = true;
+    }
+}
+
+void keyReleased(){
+    if(key == 'A' || key == 'a'){
+      isLeft = false;
+    }
+    if(key == 'D' || key == 'd'){
+      isRight = false;
+    }
+    if(key == 'W' || key =='w'){
+      isUp = false;
+    }
+    if(key == 'S' || key == 's'){
+      isDown = false;
+    }
 }
