@@ -33,7 +33,7 @@ float pedestrianRectX;
 float pedestrianRectY;
 float pedestrianTextX;
 float pedestrianTextY;
-boolean isLeft, isRight, isUp, isDown;
+boolean isLeft, isRight, upReleased, downReleased;
 
 void setup() {
   size(1200, 400);
@@ -52,9 +52,9 @@ void setup() {
   lowerSurfaceX4 = width/27 - width/10;
   bodyX1 = width/32 - width/10;
   pedestrianRectX = width/1.85;
-  pedestrianRectY = height/1.05;
+  pedestrianRectY = height/1.16 - height/20;
   pedestrianTextX = width/1.85;
-  pedestrianTextY = height/1.01;
+  pedestrianTextY = height/1.06 - height/20;
 }
 
 void draw(){
@@ -114,13 +114,11 @@ void lane(){
   line(0, height/4, width, height/4);
 }
 
-
 void pedestrian(){
-  rect(pedestrianRectX, pedestrianRectY, width/16.5, height/20);
+  rect(pedestrianRectX, pedestrianRectY, width/13.2, height/7);
   fill(0, 408, 612);
-  textSize(width/100);
+  textSize(width/80);
   text("PEDESTRIAN", pedestrianTextX, pedestrianTextY);
-
   if(isLeft){
     pedestrianRectX-= 3;
     pedestrianTextX-= 3;
@@ -128,14 +126,6 @@ void pedestrian(){
   if(isRight){
     pedestrianRectX+= 3;
     pedestrianTextX+= 3;
-  }
-  if(isUp){
-    pedestrianRectY-= 3;
-    pedestrianTextY-= 3;
-  }
-  if(isDown){
-    pedestrianRectY+= 3;
-    pedestrianTextY+= 3;
   }
 }
 
@@ -145,12 +135,6 @@ void keyPressed(){
     }
     if(key == 'D' || key == 'd'){
       isRight = true;
-    }
-    if(key == 'W' || key =='w'){
-      isUp = true;
-    }
-    if(key == 'S' || key == 's'){
-      isDown = true;
     }
 }
 
@@ -162,9 +146,11 @@ void keyReleased(){
       isRight = false;
     }
     if(key == 'W' || key =='w'){
-      isUp = false;
+      pedestrianRectY-= height/4;
+      pedestrianTextY-= height/4;
     }
     if(key == 'S' || key == 's'){
-      isDown = false;
+      pedestrianRectY+= height/4;
+      pedestrianTextY+= height/4;
     }
 }
