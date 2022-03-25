@@ -24,7 +24,7 @@ float pedestrianRectX, pedestrianRectY;
 float pedestrianTextX, pedestrianTextY;
 float distance;
 boolean isLeft, isRight, upReleased, downReleased;
-boolean collided;
+boolean collided = false;
 
 void setup() {
   size(1200, 400);
@@ -164,6 +164,16 @@ void collisionDetection(){
   
   
   if (pedestrianRectX + pedestrianWidth > blastX1 && pedestrianRectX < blastX1 + vehicleWidth && pedestrianRectY + pedestrianHeight > vehicleTop && pedestrianRectY < vehicleTop + vehicleHeight){
-     print("collided");
+    collided = true;
+  }
+  
+  if (collided){
+    fill(#D4FA00);
+    rect(0, 0, width, height);
+    fill(#FA8A21);
+    textSize(80);
+    text("GAME OVER!", width*0.3, 11*width/60);
+    
+    noLoop();    
    }
 }
