@@ -87,7 +87,7 @@ void vehicle() {
   fill(#518B01);
   rect(bodyX1, height/12, width/27, height/20);                                                                                        //body
 
-  //reset the vehicle when it goes byond the display window
+  //reset the vehicle when it goes byond the right boundary
   if (blastX4 > width) {
     noseX1 = (width/32+width/27) - width/10;
     blastX1 = width/37 - width/10;
