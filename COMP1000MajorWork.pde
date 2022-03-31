@@ -20,6 +20,7 @@ float upperSurfaceX1, upperSurfaceX2, upperSurfaceX3, upperSurfaceX4;
 float lowerSurfaceX1, lowerSurfaceX2, lowerSurfaceX3, lowerSurfaceX4;
 float bodyX1, bodyWidth;
 float vehicleSpeed;
+float pedestrianSpeed;
 float pedestrianRectX, pedestrianRectY;
 float pedestrianTextX, pedestrianTextY;
 float distance;
@@ -54,28 +55,29 @@ void setup() {
 void draw() {
   vehicle();
   pedestrian();
-  collisionDetection();
   lane();
+  collisionDetection();
 }
 
-//function to display and control spped of vehicle
+//function to display the vehicle
 void vehicle() {
-  vehicleSpeed = 1;                                            //speed of vehicle
+  //speed of vehicle
+  vehicleSpeed = 1;                                            
 
-  noseX1 = noseX1 + vehicleSpeed;
-  blastX1 = blastX1 + vehicleSpeed; 
-  blastX2 = blastX2 + vehicleSpeed;
-  blastX3 = blastX3 + vehicleSpeed;
-  blastX4 = blastX4 + vehicleSpeed;
-  upperSurfaceX1 = upperSurfaceX1 + vehicleSpeed;
-  upperSurfaceX2 = upperSurfaceX2 + vehicleSpeed;
-  upperSurfaceX3 = upperSurfaceX3 + vehicleSpeed;
-  upperSurfaceX4 = upperSurfaceX4 + vehicleSpeed;
-  lowerSurfaceX1 = lowerSurfaceX1 + vehicleSpeed;
-  lowerSurfaceX2 = lowerSurfaceX2 + vehicleSpeed;
-  lowerSurfaceX3 = lowerSurfaceX3 + vehicleSpeed;
-  lowerSurfaceX4 = lowerSurfaceX4 + vehicleSpeed;
-  bodyX1 = bodyX1 + vehicleSpeed;
+  noseX1 += vehicleSpeed;
+  blastX1 += vehicleSpeed; 
+  blastX2 += vehicleSpeed;
+  blastX3 += vehicleSpeed;
+  blastX4 += vehicleSpeed;
+  upperSurfaceX1 += vehicleSpeed;
+  upperSurfaceX2 += vehicleSpeed;
+  upperSurfaceX3 += vehicleSpeed;
+  upperSurfaceX4 += vehicleSpeed;
+  lowerSurfaceX1 += vehicleSpeed;
+  lowerSurfaceX2 += vehicleSpeed;
+  lowerSurfaceX3 += vehicleSpeed;
+  lowerSurfaceX4 += vehicleSpeed;
+  bodyX1 += vehicleSpeed;
 
   background(150);
   fill(#DE4881);
@@ -117,27 +119,37 @@ void lane() {
       stroke(150);
       dash = true;
     }
-    line(i, height/2, i+width/24, height/2);
+    line(i, height/4, i+width/24, height/4);
   }
 }
 
-//function to display and control the pedestrian 
+//function to display the pedestrian 
 void pedestrian() {
+  //speed of pedestrian
+  pedestrianSpeed = 3;                                              
+  
   rect(pedestrianRectX, pedestrianRectY, width/13.2, height/7);
   fill(0, 408, 612);
   textSize(width/80);
   text("PEDESTRIAN", pedestrianTextX, pedestrianTextY);
   if (isLeft) {
-    pedestrianRectX-= 3;
-    pedestrianTextX-= 3;
+    pedestrianRectX-= pedestrianSpeed;
+    pedestrianTextX-= pedestrianSpeed;
   }
   if (isRight) {
-    pedestrianRectX+= 3;
-    pedestrianTextX+= 3;
+    pedestrianRectX+= pedestrianSpeed;
+    pedestrianTextX+= pedestrianSpeed;
   }
 }
 
 //function to control the pedestrian
+/*
+control accepts both upper and lower case key input
+press key 'a' to move pedestrian left
+          'd' to move pedestrian right
+release key 'w' to move pedestrian up
+            's' to move pedestrian down
+*/
 void keyPressed() {
   if (key == 'A' || key == 'a') {
     isLeft = true;
