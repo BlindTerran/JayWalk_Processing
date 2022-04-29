@@ -157,6 +157,14 @@ void keyPressed() {
   if (key == 'D' || key == 'd') {
     isRight = true;
   }
+  if (key == 'W' || key =='w') {
+    pedestrianRectY-= height/4;
+    pedestrianTextY-= height/4;
+  }
+  if (key == 'S' || key == 's') {
+    pedestrianRectY+= height/4;
+    pedestrianTextY+= height/4;
+  }
 }
 
 //function to control the pedestrian
@@ -166,14 +174,6 @@ void keyReleased() {
   }
   if (key == 'D' || key == 'd') {
     isRight = false;
-  }
-  if (key == 'W' || key =='w') {
-    pedestrianRectY-= height/4;
-    pedestrianTextY-= height/4;
-  }
-  if (key == 'S' || key == 's') {
-    pedestrianRectY+= height/4;
-    pedestrianTextY+= height/4;
   }
 }
 
