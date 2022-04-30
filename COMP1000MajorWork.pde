@@ -33,21 +33,23 @@ void setup() {
   size(1200, 400);
   
   //vehicle position
-  noseX1 = (width/32+width/27) - width/10;
+  float indentation = width/10;
+  bodyX1 = width/32; 
+  noseX1 = (width/32+width/27);
   noseY1 = height/12+height/40;
-  blastX1 = width/37 - width/10;
-  blastX2 = width/32 - width/10;
-  blastX3 = width/32 - width/10;
-  blastX4 = width/37 - width/10;
-  upperSurfaceX1 = width/28 - width/10;
-  upperSurfaceX2 = width/25 - width/10;
-  upperSurfaceX3 = width/20 - width/10;
-  upperSurfaceX4 = width/27 - width/10;
-  lowerSurfaceX1 = width/28 - width/10;
-  lowerSurfaceX2 = width/25 - width/10;
-  lowerSurfaceX3 = width/20 - width/10;
-  lowerSurfaceX4 = width/27 - width/10;
-  bodyX1 = width/32 - width/10;
+  blastX1 = bodyX1 - 5*width/1184;
+  blastX2 = bodyX1;
+  blastX3 = width/32;
+  blastX4 = width/37;
+  upperSurfaceX1 = width/28;
+  upperSurfaceX2 = width/25; 
+  upperSurfaceX3 = width/20;
+  upperSurfaceX4 = width/27; 
+  lowerSurfaceX1 = width/28;
+  lowerSurfaceX2 = width/25;
+  lowerSurfaceX3 = width/20;
+  lowerSurfaceX4 = width/27; 
+
   
   //pedestrian position
   pedestrianRectX = width/1.85;
@@ -58,7 +60,9 @@ void setup() {
 
 void draw() {
   vehicle();
+  vehicleUpdate();
   pedestrian();
+  pedestrianUpdate();
   lane();
   scoreCalculator();
   collisionDetection();
@@ -66,6 +70,41 @@ void draw() {
 
 //function to display the vehicle
 void vehicle() {
+  background(150);
+  //nose cone
+  fill(#DE4881);
+  ellipse(noseX1, noseY1, width/25, height/20); 
+  //blast
+  fill(150);
+  quad(blastX1, height/10.5, blastX2, height/12, blastX3, height/12+height/20, blastX4, height/8.5);           
+  //upper surface
+  quad(upperSurfaceX1, height/18, upperSurfaceX2, height/18, upperSurfaceX3, height/12, upperSurfaceX4, height/12);       
+  //lower surface
+  quad(lowerSurfaceX1, height/6, lowerSurfaceX2, height/6, lowerSurfaceX3, height/12+height/20, lowerSurfaceX4, height/12+height/20);  
+  //body
+  fill(#518B01);
+  rect(bodyX1, height/12, width/27, height/20);                                                                                        
+
+  //reset the vehicle when it goes byond the right boundary
+  if (blastX4 > width) {
+    noseX1 = width/32+width/27;
+    blastX1 = width/37;
+    blastX2 = width/32;
+    blastX3 = width/32;
+    blastX4 = width/37;
+    upperSurfaceX1 = width/28;
+    upperSurfaceX2 = width/25;
+    upperSurfaceX3 = width/20;
+    upperSurfaceX4 = width/27;
+    lowerSurfaceX1 = width/28;
+    lowerSurfaceX2 = width/25;
+    lowerSurfaceX3 = width/20;
+    lowerSurfaceX4 = width/27;
+    bodyX1 = width/32;
+  }
+}
+
+void vehicleUpdate() {
   //speed of vehicle
   vehicleSpeed = 1;                                            
 
@@ -84,38 +123,6 @@ void vehicle() {
   lowerSurfaceX4 += vehicleSpeed;
   bodyX1 += vehicleSpeed;
 
-  background(150);
-  //nose cone
-  fill(#DE4881);
-  ellipse(noseX1, noseY1, width/25, height/20); 
-  //blast
-  fill(150);
-  quad(blastX1, height/10.5, blastX2, height/12, blastX3, height/12+height/20, blastX4, height/8.5);           
-  //upper surface
-  quad(upperSurfaceX1, height/18, upperSurfaceX2, height/18, upperSurfaceX3, height/12, upperSurfaceX4, height/12);       
-  //lower surface
-  quad(lowerSurfaceX1, height/6, lowerSurfaceX2, height/6, lowerSurfaceX3, height/12+height/20, lowerSurfaceX4, height/12+height/20);  
-  //body
-  fill(#518B01);
-  rect(bodyX1, height/12, width/27, height/20);                                                                                        
-
-  //reset the vehicle when it goes byond the right boundary
-  if (blastX4 > width) {
-    noseX1 = (width/32+width/27) - width/10;
-    blastX1 = width/37 - width/10;
-    blastX2 = width/32 - width/10;
-    blastX3 = width/32 - width/10;
-    blastX4 = width/37 - width/10;
-    upperSurfaceX1 = width/28 - width/10;
-    upperSurfaceX2 = width/25 - width/10;
-    upperSurfaceX3 = width/20 - width/10;
-    upperSurfaceX4 = width/27 - width/10;
-    lowerSurfaceX1 = width/28 - width/10;
-    lowerSurfaceX2 = width/25 - width/10;
-    lowerSurfaceX3 = width/20 - width/10;
-    lowerSurfaceX4 = width/27 - width/10;
-    bodyX1 = width/32 - width/10;
-  }
 }
 
 //function to display the lane
@@ -142,6 +149,9 @@ void pedestrian() {
   fill(0, 408, 612);
   textSize(width/80);
   text("PEDESTRIAN", pedestrianTextX, pedestrianTextY);
+}
+
+void pedestrianUpdate() {
   if (isLeft) {
     pedestrianRectX-= pedestrianSpeed;
     pedestrianTextX-= pedestrianSpeed;
@@ -152,7 +162,7 @@ void pedestrian() {
   }
 }
 
-//function to control the pedestrian
+//key control function
 /*
 control accepts both upper and lower case key input
 press key 'a' to move pedestrian left
@@ -177,7 +187,6 @@ void keyPressed() {
   }
 }
 
-//function to control the pedestrian
 void keyReleased() {
   if (key == 'A' || key == 'a') {
     isLeft = false;
