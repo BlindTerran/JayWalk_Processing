@@ -24,12 +24,15 @@ float pedestrianSpeed;
 float pedestrianRectX, pedestrianRectY;
 float pedestrianTextX, pedestrianTextY;
 float distance;
+int score = 0;
 boolean isLeft, isRight, upReleased, downReleased;
 boolean collided = false;
 
 
 void setup() {
   size(1200, 400);
+  
+  //vehicle position
   noseX1 = (width/32+width/27) - width/10;
   noseY1 = height/12+height/40;
   blastX1 = width/37 - width/10;
@@ -45,7 +48,8 @@ void setup() {
   lowerSurfaceX3 = width/20 - width/10;
   lowerSurfaceX4 = width/27 - width/10;
   bodyX1 = width/32 - width/10;
-
+  
+  //pedestrian position
   pedestrianRectX = width/1.85;
   pedestrianRectY = height/1.16 - height/20;
   pedestrianTextX = width/1.85;
@@ -56,6 +60,7 @@ void draw() {
   vehicle();
   pedestrian();
   lane();
+  scoreCalculator();
   collisionDetection();
 }
 
@@ -80,14 +85,19 @@ void vehicle() {
   bodyX1 += vehicleSpeed;
 
   background(150);
+  //nose cone
   fill(#DE4881);
-  ellipse(noseX1, noseY1, width/25, height/20);                                                                                        //nose cone
+  ellipse(noseX1, noseY1, width/25, height/20); 
+  //blast
   fill(150);
-  quad(blastX1, height/10.5, blastX2, height/12, blastX3, height/12+height/20, blastX4, height/8.5);                                   //blast
-  quad(upperSurfaceX1, height/18, upperSurfaceX2, height/18, upperSurfaceX3, height/12, upperSurfaceX4, height/12);                    //upper surface
-  quad(lowerSurfaceX1, height/6, lowerSurfaceX2, height/6, lowerSurfaceX3, height/12+height/20, lowerSurfaceX4, height/12+height/20);  //lower surface
+  quad(blastX1, height/10.5, blastX2, height/12, blastX3, height/12+height/20, blastX4, height/8.5);           
+  //upper surface
+  quad(upperSurfaceX1, height/18, upperSurfaceX2, height/18, upperSurfaceX3, height/12, upperSurfaceX4, height/12);       
+  //lower surface
+  quad(lowerSurfaceX1, height/6, lowerSurfaceX2, height/6, lowerSurfaceX3, height/12+height/20, lowerSurfaceX4, height/12+height/20);  
+  //body
   fill(#518B01);
-  rect(bodyX1, height/12, width/27, height/20);                                                                                        //body
+  rect(bodyX1, height/12, width/27, height/20);                                                                                        
 
   //reset the vehicle when it goes byond the right boundary
   if (blastX4 > width) {
@@ -192,14 +202,34 @@ void collisionDetection() {
   if (pedestrianRectX + pedestrianWidth > blastX1 && pedestrianRectX < blastX1 + vehicleWidth && pedestrianRectY + pedestrianHeight > vehicleTop && pedestrianRectY < vehicleTop + vehicleHeight) {
     collided = true;
   }
-
+  
+  //display game over scene when collided
   if (collided) {
     fill(#D4FA00);
     rect(0, 0, width, height);
     fill(#FA8A21);
     textSize(80);
     text("GAME OVER!", width*0.3, 11*width/60);
-
+    
     noLoop();
   }
+}
+//function to calculate the score 
+void scoreCalculator() {
+  if (pedestrianRectY < 0) {
+    score++;
+    
+    //reset the pedestrian 
+    pedestrianReset();
+  }
+  
+  text("SCORE: "+score, width*0.7, height*0.98);
+}
+
+//function for resetting the pedestrian
+void pedestrianReset() {
+  pedestrianRectX = width/1.85;
+  pedestrianRectY = height/1.16 - height/20;
+  pedestrianTextX = width/1.85;
+  pedestrianTextY = height/1.06 - height/20;
 }
