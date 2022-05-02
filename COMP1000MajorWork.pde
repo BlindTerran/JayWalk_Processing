@@ -39,8 +39,8 @@ void setup() {
   noseY1 = height/12+height/40;
   blastX1 = bodyX1 - 5*width/1184;
   blastX2 = bodyX1;
-  blastX3 = width/32;
-  blastX4 = width/37;
+  blastX3 = bodyX1;
+  blastX4 = bodyX1 - 5*width/1184;
   upperSurfaceX1 = width/28;
   upperSurfaceX2 = width/25; 
   upperSurfaceX3 = width/20;
