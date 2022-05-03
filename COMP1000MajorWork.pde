@@ -12,7 +12,7 @@ final int N_LANES = 2;
 final int N_CARS_IN_LANE = 10;
 final int MIN_GAP = 50;
 final int MAX_LIVES = 3;
-final int WIN_SCORE = 10;
+final int WIN_SCORE = 3;
 
 float noseX1, noseY1, noseWidth;
 float blastX1, blastX2, blastX3, blastX4;
@@ -24,7 +24,8 @@ float pedestrianSpeed;
 float pedestrianRectX, pedestrianRectY;
 float pedestrianTextX, pedestrianTextY;
 float distance;
-int score = 0;
+int winScore = 0;
+int lifeLeft = MAX_LIVES;
 boolean isLeft, isRight, upReleased, downReleased;
 boolean collided = false;
 
@@ -62,6 +63,8 @@ void draw() {
   lane();
   scoreCalculator();
   collisionDetection();
+  gameOverScene();
+  gameWinScene();
 }
 
 //function to display the vehicle
@@ -202,9 +205,30 @@ void collisionDetection() {
   if (pedestrianRectX + pedestrianWidth > blastX1 && pedestrianRectX < blastX1 + vehicleWidth && pedestrianRectY + pedestrianHeight > vehicleTop && pedestrianRectY < vehicleTop + vehicleHeight) {
     collided = true;
   }
+}
+
+//function to calculate the score and life 
+void scoreCalculator() {
+  if(pedestrianRectY < 0) {
+    winScore++;
+    
+    //reset the pedestrian when crosssed the lane
+    pedestrianReset();
+  }
+  if(collided) {
+    lifeLeft-= 1;
+    collided = false;
+    
+    //reset the pedestrian when collided
+    pedestrianReset();
+  }
   
-  //display game over scene when collided
-  if (collided) {
+  text("SCORE: "+winScore+" | "+"LIFE LEFT: "+lifeLeft, width*0.7, height*0.98);
+}
+
+//function to display game over scene when lifeLeft reaches 0
+void gameOverScene() {  
+  if (lifeLeft == 0) {
     fill(#D4FA00);
     rect(0, 0, width, height);
     fill(#FA8A21);
@@ -214,16 +238,16 @@ void collisionDetection() {
     noLoop();
   }
 }
-//function to calculate the score 
-void scoreCalculator() {
-  if (pedestrianRectY < 0) {
-    score++;
-    
-    //reset the pedestrian 
-    pedestrianReset();
+
+//function to display game win scene when score reaches WIN_SCORE
+void gameWinScene() {
+  if (winScore == WIN_SCORE) {
+    fill(#92ED99);
+    rect(0, 0, width, height);
+    fill(#FA8A21);
+    textSize(80);
+    text("YOU WIN!", width*0.33, 11*width/60);
   }
-  
-  text("SCORE: "+score, width*0.7, height*0.98);
 }
 
 //function for resetting the pedestrian
