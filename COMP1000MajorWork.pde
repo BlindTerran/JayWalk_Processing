@@ -2,12 +2,6 @@
 //[√] I declare that I have not seen anyone else's code
 //[√] I declare that I haven't shown my code to anyone else.
 
-/*
-The following statements have yellow lines
- because these constants have not yet been used.
- It's fine :)
- */
-
 final int N_LANES = 2;
 final int N_CARS_IN_LANE = 10;
 final int MIN_GAP = 50;
@@ -16,9 +10,9 @@ final int WIN_SCORE = 10;
 
 float noseX1, noseY1, noseWidth;
 float blastX1, blastX2, blastX3, blastX4;
-float upperSurfaceX1, upperSurfaceX2, upperSurfaceX3, upperSurfaceX4;
+float upperSurfaceX1, upperSurfaceX2, upperSurfaceX3, upperSurfaceX4, upperSurfaceY1, upperSurfaceY2;
 float lowerSurfaceX1, lowerSurfaceX2, lowerSurfaceX3, lowerSurfaceX4;
-float bodyX1, bodyWidth;
+float bodyX1, bodyY1, bodyWidth;
 float vehicleSpeed;
 float pedestrianSpeed;
 float pedestrianRectX, pedestrianRectY;
@@ -35,20 +29,23 @@ void setup() {
   //vehicle position
   float indentation = width/10;
   bodyX1 = width/32; 
-  noseX1 = (width/32+width/27);
+  bodyY1 = height/12;
+  noseX1 = bodyX1+width/27;
   noseY1 = height/12+height/40;
   blastX1 = bodyX1 - 5*width/1184;
   blastX2 = bodyX1;
   blastX3 = bodyX1;
   blastX4 = bodyX1 - 5*width/1184;
-  upperSurfaceX1 = width/28;
-  upperSurfaceX2 = width/25; 
-  upperSurfaceX3 = width/20;
-  upperSurfaceX4 = width/27; 
-  lowerSurfaceX1 = width/28;
-  lowerSurfaceX2 = width/25;
-  lowerSurfaceX3 = width/20;
-  lowerSurfaceX4 = width/27; 
+  upperSurfaceX1 = bodyX1+width/224;
+  upperSurfaceX2 = bodyX1+7*width/800; 
+  upperSurfaceX3 = bodyX1+3*width/160;
+  upperSurfaceX4 = bodyX1+5*width/864; 
+  upperSurfaceY1 = bodyY1-height/36;
+  upperSurfaceY2 = bodyY1;
+  lowerSurfaceX1 = bodyX1+width/224;
+  lowerSurfaceX2 = bodyX1+7*width/800;
+  lowerSurfaceX3 = bodyX1+3*width/160;
+  lowerSurfaceX4 = bodyX1+5*width/864; 
 
   
   //pedestrian position
@@ -78,12 +75,12 @@ void vehicle() {
   fill(150);
   quad(blastX1, height/10.5, blastX2, height/12, blastX3, height/12+height/20, blastX4, height/8.5);           
   //upper surface
-  quad(upperSurfaceX1, height/18, upperSurfaceX2, height/18, upperSurfaceX3, height/12, upperSurfaceX4, height/12);       
+  quad(upperSurfaceX1, upperSurfaceY1, upperSurfaceX2, upperSurfaceY1, upperSurfaceX3, upperSurfaceY2, upperSurfaceX4, upperSurfaceY2);       
   //lower surface
   quad(lowerSurfaceX1, height/6, lowerSurfaceX2, height/6, lowerSurfaceX3, height/12+height/20, lowerSurfaceX4, height/12+height/20);  
   //body
   fill(#518B01);
-  rect(bodyX1, height/12, width/27, height/20);                                                                                        
+  rect(bodyX1, bodyY1, width/27, height/20);                                                                                        
 
   //reset the vehicle when it goes byond the right boundary
   if (blastX4 > width) {
@@ -122,7 +119,6 @@ void vehicleUpdate() {
   lowerSurfaceX3 += vehicleSpeed;
   lowerSurfaceX4 += vehicleSpeed;
   bodyX1 += vehicleSpeed;
-
 }
 
 //function to display the lane
