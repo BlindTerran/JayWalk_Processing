@@ -9,9 +9,7 @@ final int MAX_LIVES = 3;
 final int WIN_SCORE = 10;
 
 float noseX1, noseY1, noseWidth;
-float blastX1, blastX2, blastX3, blastX4;
-float upperSurfaceX1, upperSurfaceX2, upperSurfaceX3, upperSurfaceX4, upperSurfaceY1, upperSurfaceY2;
-float lowerSurfaceX1, lowerSurfaceX2, lowerSurfaceX3, lowerSurfaceX4;
+float upperSurfaceY1, upperSurfaceY2;
 float bodyX1, bodyY1, bodyWidth;
 float vehicleSpeed;
 float pedestrianSpeed;
@@ -22,7 +20,6 @@ int score = 0;
 boolean isLeft, isRight, upReleased, downReleased;
 boolean collided = false;
 
-
 void setup() {
   size(1200, 400);
   
@@ -30,23 +27,9 @@ void setup() {
   float indentation = width/10;
   bodyX1 = width/32; 
   bodyY1 = height/12;
-  noseX1 = bodyX1+width/27;
   noseY1 = height/12+height/40;
-  blastX1 = bodyX1 - 5*width/1184;
-  blastX2 = bodyX1;
-  blastX3 = bodyX1;
-  blastX4 = bodyX1 - 5*width/1184;
-  upperSurfaceX1 = bodyX1+width/224;
-  upperSurfaceX2 = bodyX1+7*width/800; 
-  upperSurfaceX3 = bodyX1+3*width/160;
-  upperSurfaceX4 = bodyX1+5*width/864; 
   upperSurfaceY1 = bodyY1-height/36;
   upperSurfaceY2 = bodyY1;
-  lowerSurfaceX1 = bodyX1+width/224;
-  lowerSurfaceX2 = bodyX1+7*width/800;
-  lowerSurfaceX3 = bodyX1+3*width/160;
-  lowerSurfaceX4 = bodyX1+5*width/864; 
-
   
   //pedestrian position
   pedestrianRectX = width/1.85;
@@ -82,12 +65,13 @@ void vehicle() {
   fill(#518B01);
   rect(bodyX1, bodyY1, width/27, height/20);                                                                                        
 
-  //reset the vehicle when it goes byond the right boundary
-  if (blastX4 > width) {
+  //reset the vehicle if it goes byond the right boundary
+  if (bodyX1 - 5*width/1184 > width) {
     bodyX1 = width/32;
   }
 }
 
+//function to update vehicle position
 void vehicleUpdate() {
   //speed of vehicle
   vehicleSpeed = 1;                                            
@@ -121,6 +105,7 @@ void pedestrian() {
   text("PEDESTRIAN", pedestrianTextX, pedestrianTextY);
 }
 
+//function to update pedestrian position
 void pedestrianUpdate() {
   if (isLeft) {
     pedestrianRectX-= pedestrianSpeed;
@@ -172,13 +157,13 @@ void collisionDetection() {
   noseWidth = width/25;
   bodyWidth = width/27;
 
-  vehicleWidth = blastX2 - blastX1 + bodyWidth + noseWidth/2;
+  vehicleWidth = bodyX1 - bodyX1 - 5*width/1184 + bodyWidth + noseWidth/2;
   vehicleHeight = height/6 - height/18;
   vehicleTop = height/18;
   pedestrianWidth = width/13.2;
   pedestrianHeight = height/7;
 
-  if (pedestrianRectX + pedestrianWidth > blastX1 && pedestrianRectX < blastX1 + vehicleWidth && pedestrianRectY + pedestrianHeight > vehicleTop && pedestrianRectY < vehicleTop + vehicleHeight) {
+  if (pedestrianRectX + pedestrianWidth > bodyX1 - 5*width/1184 && pedestrianRectX < bodyX1 - 5*width/1184 + vehicleWidth && pedestrianRectY + pedestrianHeight > vehicleTop && pedestrianRectY < vehicleTop + vehicleHeight) {
     collided = true;
   }
   
