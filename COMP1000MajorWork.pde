@@ -70,33 +70,20 @@ void vehicle() {
   background(150);
   //nose cone
   fill(#DE4881);
-  ellipse(noseX1, noseY1, width/25, height/20); 
+  ellipse(bodyX1+width/27, noseY1, width/25, height/20); 
   //blast
   fill(150);
-  quad(blastX1, height/10.5, blastX2, height/12, blastX3, height/12+height/20, blastX4, height/8.5);           
+  quad(bodyX1 - 5*width/1184, height/10.5, bodyX1, height/12, bodyX1, height/12+height/20, bodyX1 - 5*width/1184, height/8.5);           
   //upper surface
-  quad(upperSurfaceX1, upperSurfaceY1, upperSurfaceX2, upperSurfaceY1, upperSurfaceX3, upperSurfaceY2, upperSurfaceX4, upperSurfaceY2);       
+  quad(bodyX1+width/224, upperSurfaceY1, bodyX1+7*width/800, upperSurfaceY1, bodyX1+3*width/160, upperSurfaceY2, bodyX1+5*width/864, upperSurfaceY2);       
   //lower surface
-  quad(lowerSurfaceX1, height/6, lowerSurfaceX2, height/6, lowerSurfaceX3, height/12+height/20, lowerSurfaceX4, height/12+height/20);  
+  quad(bodyX1+width/224, height/6, bodyX1+7*width/800, height/6, bodyX1+3*width/160, height/12+height/20, bodyX1+5*width/864, height/12+height/20);  
   //body
   fill(#518B01);
   rect(bodyX1, bodyY1, width/27, height/20);                                                                                        
 
   //reset the vehicle when it goes byond the right boundary
   if (blastX4 > width) {
-    noseX1 = width/32+width/27;
-    blastX1 = width/37;
-    blastX2 = width/32;
-    blastX3 = width/32;
-    blastX4 = width/37;
-    upperSurfaceX1 = width/28;
-    upperSurfaceX2 = width/25;
-    upperSurfaceX3 = width/20;
-    upperSurfaceX4 = width/27;
-    lowerSurfaceX1 = width/28;
-    lowerSurfaceX2 = width/25;
-    lowerSurfaceX3 = width/20;
-    lowerSurfaceX4 = width/27;
     bodyX1 = width/32;
   }
 }
@@ -105,19 +92,6 @@ void vehicleUpdate() {
   //speed of vehicle
   vehicleSpeed = 1;                                            
 
-  noseX1 += vehicleSpeed;
-  blastX1 += vehicleSpeed; 
-  blastX2 += vehicleSpeed;
-  blastX3 += vehicleSpeed;
-  blastX4 += vehicleSpeed;
-  upperSurfaceX1 += vehicleSpeed;
-  upperSurfaceX2 += vehicleSpeed;
-  upperSurfaceX3 += vehicleSpeed;
-  upperSurfaceX4 += vehicleSpeed;
-  lowerSurfaceX1 += vehicleSpeed;
-  lowerSurfaceX2 += vehicleSpeed;
-  lowerSurfaceX3 += vehicleSpeed;
-  lowerSurfaceX4 += vehicleSpeed;
   bodyX1 += vehicleSpeed;
 }
 
