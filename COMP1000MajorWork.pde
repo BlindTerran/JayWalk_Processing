@@ -12,6 +12,7 @@ float noseX1, noseY1, noseWidth;
 float upperSurfaceY1, upperSurfaceY2;
 float bodyX1, bodyY1, bodyWidth;
 float vehicleSpeed;
+float indentation = 100;
 float pedestrianSpeed;
 float pedestrianRectX, pedestrianRectY;
 float pedestrianTextX, pedestrianTextY;
@@ -24,8 +25,7 @@ void setup() {
   size(1200, 400);
   
   //vehicle position
-  float indentation = width/10;
-  bodyX1 = width/32; 
+  bodyX1 = width/32 - indentation; 
   bodyY1 = height/12;
   noseY1 = height/12+height/40;
   upperSurfaceY1 = bodyY1-height/36;
@@ -67,14 +67,14 @@ void vehicle() {
 
   //reset the vehicle if it goes byond the right boundary
   if (bodyX1 - 5*width/1184 > width) {
-    bodyX1 = width/32;
+    bodyX1 = width/32 - indentation;
   }
 }
 
 //function to update vehicle position
 void vehicleUpdate() {
   //speed of vehicle
-  vehicleSpeed = 1;                                            
+  vehicleSpeed = 2;                                            
 
   bodyX1 += vehicleSpeed;
 }
