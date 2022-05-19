@@ -8,6 +8,7 @@ final int MIN_GAP = 50;
 final int MAX_LIVES = 3;
 final int WIN_SCORE = 10;
 
+
 float noseX1, noseY1, noseWidth;
 float upperSurfaceY1, upperSurfaceY2;
 float bodyX1, bodyY1, bodyWidth;
@@ -39,17 +40,16 @@ void setup() {
 }
 
 void draw() {
-  vehicle();
+  drawVehicle();
   vehicleUpdate();
-  pedestrian();
+  drawPedestrian();
   pedestrianUpdate();
-  lane();
+  drawLane();
   scoreCalculator();
   collisionDetection();
 }
 
-//function to display the vehicle
-void vehicle() {
+void drawVehicle() {
   background(150);
   //nose cone
   fill(#DE4881);
@@ -79,10 +79,14 @@ void vehicleUpdate() {
   bodyX1 += vehicleSpeed;
 }
 
-//function to display the lane
-void lane() {
+//function to draw dashed lane
+void drawLane() {
+    float dashedLaneGap = width/24;
     boolean dash = true;
-    for (int i=0; i<=width; i+=width/24) {
+    //first line starts at x position 0
+    //as long as line x position is within the screen width, draw dashed line
+    //draw black line and then background colour line
+    for (int lineXpos = 0; lineXpos <= width; lineXpos += dashedLaneGap) {
     if(dash){
       stroke(0);
       dash = false;
@@ -90,12 +94,12 @@ void lane() {
       stroke(150);
       dash = true;
     }
-    line(i, height/4, i+width/24, height/4);
+    line(lineXpos, height/4, lineXpos+dashedLaneGap, height/4);
   }
 }
 
 //function to display the pedestrian 
-void pedestrian() {
+void drawPedestrian() {
   //speed of pedestrian
   pedestrianSpeed = 3;                                              
   
@@ -105,7 +109,6 @@ void pedestrian() {
   text("PEDESTRIAN", pedestrianTextX, pedestrianTextY);
 }
 
-//function to update pedestrian position
 void pedestrianUpdate() {
   if (isLeft) {
     pedestrianRectX-= pedestrianSpeed;
@@ -151,7 +154,6 @@ void keyReleased() {
   }
 }
 
-//function to detect collision
 void collisionDetection() {
   float vehicleTop, vehicleWidth, vehicleHeight, pedestrianWidth, pedestrianHeight;
   noseWidth = width/25;
@@ -163,7 +165,10 @@ void collisionDetection() {
   pedestrianWidth = width/13.2;
   pedestrianHeight = height/7;
 
-  if (pedestrianRectX + pedestrianWidth > bodyX1 - 5*width/1184 && pedestrianRectX < bodyX1 - 5*width/1184 + vehicleWidth && pedestrianRectY + pedestrianHeight > vehicleTop && pedestrianRectY < vehicleTop + vehicleHeight) {
+  if (pedestrianRectX + pedestrianWidth > bodyX1 - 5*width/1184 
+  && pedestrianRectX < bodyX1 - 5*width/1184 + vehicleWidth 
+  && pedestrianRectY + pedestrianHeight > vehicleTop 
+  && pedestrianRectY < vehicleTop + vehicleHeight) {
     collided = true;
   }
   
@@ -175,6 +180,7 @@ void collisionDetection() {
     textSize(80);
     text("GAME OVER!", width*0.3, 11*width/60);
     
+    //cease the program
     noLoop();
   }
 }
@@ -186,11 +192,9 @@ void scoreCalculator() {
     //reset the pedestrian 
     pedestrianReset();
   }
-  
   text("SCORE: "+score, width*0.7, height*0.98);
 }
 
-//function for resetting the pedestrian
 void pedestrianReset() {
   pedestrianRectX = width/1.85;
   pedestrianRectY = height/1.16 - height/20;
