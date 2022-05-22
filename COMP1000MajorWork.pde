@@ -56,14 +56,14 @@ void drawVehicle() {
   background(150);
   //nose cone
   fill(#DE4881);
-  ellipse(bodyX1+width/27, noseY1, width/25, height/20); 
+  ellipse(bodyX1+width/27, bodyY1+height/40, width/25, height/20); 
   //blast
   fill(150);
-  quad(bodyX1 - 5*width/1184, height/10.5, bodyX1, height/12, bodyX1, height/12+height/20, bodyX1 - 5*width/1184, height/8.5);           
+  quad(bodyX1 - 5*width/1184, bodyY1+height/84, bodyX1, bodyY1, bodyX1, bodyY1+height/20, bodyX1 - 5*width/1184, bodyY1+7*height/204);           
   //upper surface
-  quad(bodyX1+width/224, upperSurfaceY1, bodyX1+7*width/800, upperSurfaceY1, bodyX1+3*width/160, upperSurfaceY2, bodyX1+5*width/864, upperSurfaceY2);       
+  quad(bodyX1+width/224, bodyY1-height/36, bodyX1+7*width/800, bodyY1-height/36, bodyX1+3*width/160, bodyY1, bodyX1+5*width/864, bodyY1);       
   //lower surface
-  quad(bodyX1+width/224, height/6, bodyX1+7*width/800, height/6, bodyX1+3*width/160, height/12+height/20, bodyX1+5*width/864, height/12+height/20);  
+  quad(bodyX1+width/224, bodyY1+height/12, bodyX1+7*width/800, bodyY1+height/12, bodyX1+3*width/160, bodyY1+height/20, bodyX1+5*width/864,  bodyY1+height/20);  
   //body
   fill(#518B01);
   rect(bodyX1, bodyY1, width/27, height/20);                                                                                        
