@@ -171,19 +171,8 @@ void collisionDetection() {
   && pedestrianRectY < vehicleTop + vehicleHeight) {
     collided = true;
   }
-  
-  //display game over scene when collided
-  if (collided) {
-    fill(#D4FA00);
-    rect(0, 0, width, height);
-    fill(#FA8A21);
-    textSize(80);
-    text("GAME OVER!", width*0.3, 11*width/60);
-    
-    //cease the program
-    noLoop();
-  }
 }
+
 //function to calculate the score 
 void scoreCalculator() {
   if (pedestrianRectY < 0) {
