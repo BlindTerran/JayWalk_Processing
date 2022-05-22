@@ -18,7 +18,8 @@ float pedestrianSpeed;
 float pedestrianRectX, pedestrianRectY;
 float pedestrianTextX, pedestrianTextY;
 float distance;
-int score = 0;
+int winScore = 0;
+int lifeLeft = MAX_LIVES;
 boolean isLeft, isRight, upReleased, downReleased;
 boolean collided = false;
 
@@ -173,15 +174,47 @@ void collisionDetection() {
   }
 }
 
-//function to calculate the score 
+//function to calculate the score and life 
 void scoreCalculator() {
-  if (pedestrianRectY < 0) {
-    score++;
+  if(pedestrianRectY < 0) {
+    winScore++;
     
-    //reset the pedestrian 
+    //reset the pedestrian when crosssed the lane
     pedestrianReset();
   }
-  text("SCORE: "+score, width*0.7, height*0.98);
+  if(collided) {
+    lifeLeft-= 1;
+    collided = false;
+    
+    //reset the pedestrian when collided
+    pedestrianReset();
+  }
+  
+  text("SCORE: "+winScore+" | "+"LIFE LEFT: "+lifeLeft, width*0.7, height*0.98);
+}
+
+//function to display game over scene when lifeLeft reaches 0
+void gameOverScene() {  
+  if (lifeLeft == 0) {
+    fill(#D4FA00);
+    rect(0, 0, width, height);
+    fill(#FA8A21);
+    textSize(80);
+    text("GAME OVER!", width*0.3, 11*width/60);
+    
+    noLoop();
+  }
+}
+
+//function to display game win scene when score reaches WIN_SCORE
+void gameWinScene() {
+  if (winScore == WIN_SCORE) {
+    fill(#92ED99);
+    rect(0, 0, width, height);
+    fill(#FA8A21);
+    textSize(80);
+    text("YOU WIN!", width*0.33, 11*width/60);
+  }
 }
 
 void pedestrianReset() {
