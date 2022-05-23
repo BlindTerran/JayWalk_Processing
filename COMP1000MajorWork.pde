@@ -3,11 +3,12 @@
 //[√] I declare that I haven't shown my code to anyone else.
 
 final int N_LANES = 2;
-final int N_CARS_IN_LANE = 5;
-final int SPEED_REDUCTION_DISTANCE = 50;
-final int MIN_GAP = 30;
+final int N_CARS_IN_LANE = 10;
+final int SPEED_REDUCTION_DISTANCE = 120;
+final int MIN_GAP = 50;
 final int MAX_LIVES = 3;
 final int WIN_SCORE = 3;
+final int FRAME_RATE = 60;
 
 float[][] vehicleXpos;
 float[] vehicleYpos;
@@ -27,6 +28,7 @@ boolean collided = false;
 
 void setup() {
   size(1200, 400);
+  frameRate(FRAME_RATE);
   laneGap = height/12;
   initialVehicleYpos = height/20;
   
@@ -34,11 +36,6 @@ void setup() {
   vehicleXpos = new float [N_LANES][N_CARS_IN_LANE]; 
   vehicleYpos = new float [N_LANES];  
   vehicleVelocity = new float [N_LANES][N_CARS_IN_LANE];
-  
-  assignXpositions();
-  assignYpos();
-  assignVelocity();  
-  
   //pedestrian position
   pedestrianRectX = width/1.85;
   pedestrianRectY = height/1.16 - height/20;
@@ -50,11 +47,18 @@ void setup() {
   AABBheight = height/6 - height/18;
   pedestrianWidth = width/13.2;
   pedestrianHeight = height/7;
+  
+  assignXpositions();
+  assignYpos();
+  assignVelocity();  
+  
+
 }
 
 void draw() {
   drawVehicle();
   vehicleUpdate();
+  speedReduction();
   vehicleReset();
   drawPedestrian();
   pedestrianUpdate();
@@ -69,13 +73,13 @@ void draw() {
 void assignXpositions() {
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {
-      if(k == 0) {
+      if (k == 0) {
         //assign random value between 0 to -50 to the X position of the first vehicle in each lane
-        vehicleXpos[i][k] = random(-50) - AABBwidth;
+        vehicleXpos[i][k] = random(-20) - AABBwidth;
       } else {
         //for the second vehicle onwards, each X position is assgined random value between 10 to 40
         //each X position is less than previous Xpos to avoid overlapping, k-1 is the front vehicle
-        vehicleXpos[i][k] = vehicleXpos[i][k-1] - MIN_GAP - AABBwidth - random(40, 100);
+        vehicleXpos[i][k] = vehicleXpos[i][k-1] - MIN_GAP - AABBwidth - random(70, 300);
       }
     }
   }
@@ -92,7 +96,12 @@ void assignYpos() {
 void assignVelocity() {
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {
-      vehicleVelocity[i][k] = random(2, 8);
+      //for the first vehicle 
+      if (k == 0){
+        vehicleVelocity[i][k] = random(3, 5);
+      } else {
+        vehicleVelocity[i][k] = random(3, 8);
+      }
     }
   }
 }
@@ -103,12 +112,14 @@ void vehicleReset() {
     //if the last vehicle in that lane passes the right screen boundary, <Xpositions[i].length-1>: last vehicle in lane[i]
     if (vehicleXpos[i][vehicleXpos[i].length - 1] > width) {
       
-      //regenerate the Xpositions in that spcific lane
+      //regenerate the Xpositions their velocities in that spcific lane
       for (int k = 0; k < N_CARS_IN_LANE; k++) {
         if(k == 0) {
-          vehicleXpos[i][k] = random(-50) - AABBwidth;
+          vehicleXpos[i][k] = random(-20) - AABBwidth;
+          vehicleVelocity[i][k] = random(3, 5);
         } else {
-          vehicleXpos[i][k] = vehicleXpos[i][k-1] - MIN_GAP - AABBwidth - random(20, 100);
+          vehicleXpos[i][k] = vehicleXpos[i][k-1] - MIN_GAP - AABBwidth - random(70, 300);
+          vehicleVelocity[i][k] = random(3, 8);
         }
       }
     }
@@ -144,6 +155,33 @@ void vehicleUpdate() {
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {
       vehicleXpos[i][k] = vehicleXpos[i][k] + vehicleVelocity[i][k];
+    }
+  }
+}
+
+void speedReduction() {
+  //index i for lane, k for each vehicle in that lane
+  for (int i = 0; i < N_LANES; i++) {
+    for (int k = 0; k < N_CARS_IN_LANE; k++) {
+      //cease loop when it comes to the last element in that lane
+      if (k == vehicleXpos[i].length - 1) {
+        break;
+      } else {
+      
+        //when the distance between two vehicles at the same lane less than SPEED_REDUCTION_DISTANCE
+        if(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) < SPEED_REDUCTION_DISTANCE) {
+        
+          //calculate acceleration
+          finalVelocity = vehicleVelocity[i][k];
+          initialVelocity = vehicleVelocity[i][k+1];
+        
+          //acceleration = (finalVelocity^2 - initialVelocity^2) / (2 * distance)
+          acceleration = (sq(finalVelocity) - sq(initialVelocity)) / (2 * (SPEED_REDUCTION_DISTANCE - MIN_GAP));
+        
+          //decelerate the vehicle  
+          vehicleVelocity[i][k+1] = vehicleVelocity[i][k+1] + acceleration; 
+        }
+      }
     }
   }
 }
@@ -288,4 +326,21 @@ void pedestrianReset() {
   pedestrianRectY = height/1.16 - height/20;
   pedestrianTextX = width/1.85;
   pedestrianTextY = height/1.06 - height/20;
+}
+
+void debug() {
+  print("Positions: \n");
+  for (int i = 0; i < N_LANES; i++) {
+    for (int k = 0; k < N_CARS_IN_LANE; k++) {
+      print(vehicleXpos[i][k] + " ");
+    }
+    print("\n");
+  }
+  print("Initial Velocity: \n");
+  for (int i = 0; i < N_LANES; i++) {
+    for (int k = 0; k < N_CARS_IN_LANE; k++) {
+      print(vehicleVelocity[i][k] + " ");
+    }
+    print("\n");
+  }
 }
