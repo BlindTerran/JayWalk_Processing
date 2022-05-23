@@ -3,22 +3,23 @@
 //[√] I declare that I haven't shown my code to anyone else.
 
 final int N_LANES = 2;
-final int N_CARS_IN_LANE = 10;
-final int MIN_GAP = 50;
+final int N_CARS_IN_LANE = 5;
+final int SPEED_REDUCTION_DISTANCE = 50;
+final int MIN_GAP = 30;
 final int MAX_LIVES = 3;
 final int WIN_SCORE = 3;
 
-
-float noseX1, noseY1, noseWidth;
-float upperSurfaceY1, upperSurfaceY2;
-float bodyX1, bodyY1, bodyWidth;
-float vehicleSpeed;
+float[][] vehicleXpos;
+float[] vehicleYpos;
+float[][] vehicleVelocity;
+float laneGap;
+float initialVehicleYpos;
 float indentation = 100;
 float pedestrianSpeed;
 float pedestrianRectX, pedestrianRectY;
 float pedestrianTextX, pedestrianTextY;
+float acceleration, finalVelocity, initialVelocity;
 float AABBwidth, AABBheight, AABBx, AABBy, pedestrianWidth, pedestrianHeight;
-float distance;
 int winScore = 0;
 int lifeLeft = MAX_LIVES;
 boolean isLeft, isRight, upReleased, downReleased;
@@ -26,13 +27,17 @@ boolean collided = false;
 
 void setup() {
   size(1200, 400);
+  laneGap = height/12;
+  initialVehicleYpos = height/20;
   
   //vehicle position
-  bodyX1 = width/32 - indentation; 
-  bodyY1 = height/12;
-  noseY1 = height/12+height/40;
-  upperSurfaceY1 = bodyY1-height/36;
-  upperSurfaceY2 = bodyY1;
+  vehicleXpos = new float [N_LANES][N_CARS_IN_LANE]; 
+  vehicleYpos = new float [N_LANES];  
+  vehicleVelocity = new float [N_LANES][N_CARS_IN_LANE];
+  
+  assignXpositions();
+  assignYpos();
+  assignVelocity();  
   
   //pedestrian position
   pedestrianRectX = width/1.85;
@@ -50,43 +55,97 @@ void setup() {
 void draw() {
   drawVehicle();
   vehicleUpdate();
+  vehicleReset();
   drawPedestrian();
   pedestrianUpdate();
   drawLane();
   scoreCalculator();
-  collisionDetection();
+//  collisionDetection();
   gameOverScene();
   gameWinScene();
 }
 
-void drawVehicle() {
-  background(150);
-  //nose cone
-  fill(#DE4881);
-  ellipse(bodyX1+width/27, bodyY1+height/40, width/25, height/20); 
-  //blast
-  fill(150);
-  quad(bodyX1 - 5*width/1184, bodyY1+height/84, bodyX1, bodyY1, bodyX1, bodyY1+height/20, bodyX1 - 5*width/1184, bodyY1+7*height/204);           
-  //upper surface
-  quad(bodyX1+width/224, bodyY1-height/36, bodyX1+7*width/800, bodyY1-height/36, bodyX1+3*width/160, bodyY1, bodyX1+5*width/864, bodyY1);       
-  //lower surface
-  quad(bodyX1+width/224, bodyY1+height/12, bodyX1+7*width/800, bodyY1+height/12, bodyX1+3*width/160, bodyY1+height/20, bodyX1+5*width/864,  bodyY1+height/20);  
-  //body
-  fill(#518B01);
-  rect(bodyX1, bodyY1, width/27, height/20);                                                                                        
-
-  //reset the vehicle if it goes byond the right boundary
-  if (bodyX1 - 5*width/1184 > width) {
-    bodyX1 = width/32 - indentation;
+//2d array Xpositions, Row(i): lane; Colum(k): each vehicle's X position in that lane
+void assignXpositions() {
+  for (int i = 0; i < N_LANES; i++) {
+    for (int k = 0; k < N_CARS_IN_LANE; k++) {
+      if(k == 0) {
+        //assign random value between 0 to -50 to the X position of the first vehicle in each lane
+        vehicleXpos[i][k] = random(-50) - AABBwidth;
+      } else {
+        //for the second vehicle onwards, each X position is assgined random value between 10 to 40
+        //each X position is less than previous Xpos to avoid overlapping, k-1 is the front vehicle
+        vehicleXpos[i][k] = vehicleXpos[i][k-1] - MIN_GAP - AABBwidth - random(40, 100);
+      }
+    }
   }
 }
 
-//function to update vehicle position
-void vehicleUpdate() {
-  //speed of vehicle
-  vehicleSpeed = 2;                                            
+void assignYpos() {
+  for (int i = 0; i < N_LANES; i++) {
+    vehicleYpos[i] = initialVehicleYpos;
+    initialVehicleYpos += initialVehicleYpos + laneGap;
+  }
+}
 
-  bodyX1 += vehicleSpeed;
+//2d array vehicleVelocity, Row(i): lane; Colum(k): each vehicle's velocity in that lane
+void assignVelocity() {
+  for (int i = 0; i < N_LANES; i++) {
+    for (int k = 0; k < N_CARS_IN_LANE; k++) {
+      vehicleVelocity[i][k] = random(2, 8);
+    }
+  }
+}
+
+void vehicleReset() {
+  //i is the counter for lane
+  for (int i = 0; i < N_LANES; i++) {
+    //if the last vehicle in that lane passes the right screen boundary, <Xpositions[i].length-1>: last vehicle in lane[i]
+    if (vehicleXpos[i][vehicleXpos[i].length - 1] > width) {
+      
+      //regenerate the Xpositions in that spcific lane
+      for (int k = 0; k < N_CARS_IN_LANE; k++) {
+        if(k == 0) {
+          vehicleXpos[i][k] = random(-50) - AABBwidth;
+        } else {
+          vehicleXpos[i][k] = vehicleXpos[i][k-1] - MIN_GAP - AABBwidth - random(20, 100);
+        }
+      }
+    }
+  }
+}
+
+void drawVehicle() {
+  background(150);
+  //<Xposition[i][k]>: draw vehicle in lane[i], increment the k to draw next vehicle in that lane
+  //increment the i stars to draw vehicles in the next lane
+  for (int i = 0; i < N_LANES; i++) {
+    for (int k = 0; k < N_CARS_IN_LANE; k++) {
+      //nose cone
+      fill(#DE4881);
+      ellipse(vehicleXpos[i][k]+width/27, vehicleYpos[i]+height/40, width/25, height/20); 
+      //blast
+      fill(150);
+      quad(vehicleXpos[i][k] - 5*width/1184, vehicleYpos[i]+height/84, vehicleXpos[i][k], vehicleYpos[i], vehicleXpos[i][k], vehicleYpos[i]+height/20, vehicleXpos[i][k] - 5*width/1184, vehicleYpos[i]+7*height/204);           
+      //upper surface
+      quad(vehicleXpos[i][k]+width/224, vehicleYpos[i]-height/36, vehicleXpos[i][k]+7*width/800, vehicleYpos[i]-height/36, vehicleXpos[i][k]+3*width/160, vehicleYpos[i], vehicleXpos[i][k]+5*width/864, vehicleYpos[i]);       
+      //lower surface
+      quad(vehicleXpos[i][k]+width/224, vehicleYpos[i]+height/12, vehicleXpos[i][k]+7*width/800, vehicleYpos[i]+height/12, vehicleXpos[i][k]+3*width/160, vehicleYpos[i]+height/20, vehicleXpos[i][k]+5*width/864, vehicleYpos[i]+height/20);  
+      //body
+      fill(#518B01);
+      rect(vehicleXpos[i][k], vehicleYpos[i], width/27, height/20);                                                                                        
+    }
+  }
+}
+
+//assign each vehicle's corresponding velocity to that vehicle
+//vehicle moves at a dynamic velocity on one dimension every unit of time
+void vehicleUpdate() {
+  for (int i = 0; i < N_LANES; i++) {
+    for (int k = 0; k < N_CARS_IN_LANE; k++) {
+      vehicleXpos[i][k] = vehicleXpos[i][k] + vehicleVelocity[i][k];
+    }
+  }
 }
 
 //function to draw dashed lane
@@ -164,22 +223,22 @@ void keyReleased() {
   }
 }
 
-void collisionDetection() {
-  AABBx = bodyX1 - (width/32-width/37);
-  AABBy = bodyY1 - (height/12 - height/18);
+//void collisionDetection() {
+//  AABBx = vehicleXpos - (width/32-width/37);
+//  AABBy = bodyY1 - (height/12 - height/18);
   
-  //in pedestrian's perspective
-  //left to right collisioin
-  if (pedestrianRectX + pedestrianWidth > AABBx
-  //right to left collision
-  && pedestrianRectX < AABBx + AABBwidth 
-  //bottom to top collison
-  && pedestrianRectY + pedestrianHeight > AABBy 
-  //top to bottom collison
-  && pedestrianRectY < AABBy + AABBheight) {
-    collided = true;
-  }
-}
+//  //in pedestrian's perspective
+//  //left to right collisioin
+//  if (pedestrianRectX + pedestrianWidth > AABBx
+//  //right to left collision
+//  && pedestrianRectX < AABBx + AABBwidth 
+//  //bottom to top collison
+//  && pedestrianRectY + pedestrianHeight > AABBy 
+//  //top to bottom collison
+//  && pedestrianRectY < AABBy + AABBheight) {
+//    collided = true;
+//  }
+//}
 
 //function to calculate the score and life 
 void scoreCalculator() {
