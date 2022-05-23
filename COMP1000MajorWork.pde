@@ -17,6 +17,7 @@ float indentation = 100;
 float pedestrianSpeed;
 float pedestrianRectX, pedestrianRectY;
 float pedestrianTextX, pedestrianTextY;
+float AABBwidth, AABBheight, AABBx, AABBy, pedestrianWidth, pedestrianHeight;
 float distance;
 int winScore = 0;
 int lifeLeft = MAX_LIVES;
@@ -38,6 +39,12 @@ void setup() {
   pedestrianRectY = height/1.16 - height/20;
   pedestrianTextX = width/1.85;
   pedestrianTextY = height/1.06 - height/20;
+  
+  //collider porperty
+  AABBwidth = width/27 + width/50;
+  AABBheight = height/6 - height/18;
+  pedestrianWidth = width/13.2;
+  pedestrianHeight = height/7;
 }
 
 void draw() {
@@ -158,20 +165,18 @@ void keyReleased() {
 }
 
 void collisionDetection() {
-  float vehicleTop, vehicleWidth, vehicleHeight, pedestrianWidth, pedestrianHeight;
-  noseWidth = width/25;
-  bodyWidth = width/27;
-
-  vehicleWidth = bodyX1 - bodyX1 - 5*width/1184 + bodyWidth + noseWidth/2;
-  vehicleHeight = height/6 - height/18;
-  vehicleTop = height/18;
-  pedestrianWidth = width/13.2;
-  pedestrianHeight = height/7;
-
-  if (pedestrianRectX + pedestrianWidth > bodyX1 - 5*width/1184 
-  && pedestrianRectX < bodyX1 - 5*width/1184 + vehicleWidth 
-  && pedestrianRectY + pedestrianHeight > vehicleTop 
-  && pedestrianRectY < vehicleTop + vehicleHeight) {
+  AABBx = bodyX1 - (width/32-width/37);
+  AABBy = bodyY1 - (height/12 - height/18);
+  
+  //in pedestrian's perspective
+  //left to right collisioin
+  if (pedestrianRectX + pedestrianWidth > AABBx
+  //right to left collision
+  && pedestrianRectX < AABBx + AABBwidth 
+  //bottom to top collison
+  && pedestrianRectY + pedestrianHeight > AABBy 
+  //top to bottom collison
+  && pedestrianRectY < AABBy + AABBheight) {
     collided = true;
   }
 }
