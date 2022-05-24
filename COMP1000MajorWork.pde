@@ -4,8 +4,8 @@
 
 final int N_LANES = 2;
 final int N_CARS_IN_LANE = 10;
-final int SPEED_REDUCTION_DISTANCE = 120;
-final int MIN_GAP = 50;
+final int SPEED_REDUCTION_DISTANCE = 99;
+final int MIN_GAP = 30;
 final int MAX_LIVES = 3;
 final int WIN_SCORE = 3;
 final int FRAME_RATE = 60;
@@ -15,7 +15,7 @@ float[] vehicleYpos;
 float[][] vehicleVelocity;
 float laneGap;
 float initialVehicleYpos;
-float indentation = 100;
+float gaugeColour = 90;
 float pedestrianSpeed;
 float pedestrianRectX, pedestrianRectY;
 float pedestrianTextX, pedestrianTextY;
@@ -59,6 +59,7 @@ void draw() {
   drawVehicle();
   vehicleUpdate();
   speedReduction();
+  debug();
   vehicleReset();
   drawPedestrian();
   pedestrianUpdate();
@@ -79,7 +80,7 @@ void assignXpositions() {
       } else {
         //for the second vehicle onwards, each X position is assgined random value between 10 to 40
         //each X position is less than previous Xpos to avoid overlapping, k-1 is the front vehicle
-        vehicleXpos[i][k] = vehicleXpos[i][k-1] - MIN_GAP - AABBwidth - random(70, 300);
+        vehicleXpos[i][k] = vehicleXpos[i][k-1] - MIN_GAP - AABBwidth - random(50, 300);
       }
     }
   }
@@ -132,6 +133,7 @@ void drawVehicle() {
   //increment the i stars to draw vehicles in the next lane
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {
+      strokeWeight(1);
       //nose cone
       fill(#DE4881);
       ellipse(vehicleXpos[i][k]+width/27, vehicleYpos[i]+height/40, width/25, height/20); 
@@ -167,24 +169,44 @@ void speedReduction() {
       if (k == vehicleXpos[i].length - 1) {
         break;
       } else {
-      
+        
         //when the distance between two vehicles at the same lane less than SPEED_REDUCTION_DISTANCE
         if(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) < SPEED_REDUCTION_DISTANCE) {
-        
-          //calculate acceleration
-          finalVelocity = vehicleVelocity[i][k];
-          initialVelocity = vehicleVelocity[i][k+1];
-        
-          //acceleration = (finalVelocity^2 - initialVelocity^2) / (2 * distance)
-          acceleration = (sq(finalVelocity) - sq(initialVelocity)) / (2 * (SPEED_REDUCTION_DISTANCE - MIN_GAP));
-        
+          
+          
+          acceleration = 0.01;
+             
           //decelerate the vehicle  
-          vehicleVelocity[i][k+1] = vehicleVelocity[i][k+1] + acceleration; 
+          vehicleVelocity[i][k+1] = vehicleVelocity[i][k+1] - acceleration; 
+          
+          if(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) <= MIN_GAP) {
+            vehicleVelocity[i][k+1] = vehicleVelocity[i][k];
+          }
+          
         }
       }
     }
   }
 }
+
+//void drawGauge() {
+//  background(150);
+//  for (int i = 0; i < N_LANES; i++) {
+//    for (int k = 0; k < N_CARS_IN_LANE; k++) {
+//      //cease loop when it comes to the last element in that lane
+//      if (k == vehicleXpos[i].length - 1) {
+//        break;
+//      } else {
+//        fill(#47FF00);
+//        line(vehicleXpos[i][k], vehicleYpos[i]+AABBheight/2, vehicleXpos[i][k+1]+AABBwidth, vehicleYpos[i]+AABBheight/2);
+        
+//        textSize(50);
+//        float textWidth = textWidth("00");
+//        text((abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth)),  vehicleXpos[i][k+1]+AABBwidth + ((abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth))/2) - textWidth/2, vehicleYpos[i] + AABBheight/2 + height/90);      
+//      }
+//    }
+//  }
+//}
 
 //function to draw dashed lane
 void drawLane() {
@@ -201,6 +223,7 @@ void drawLane() {
       stroke(150);
       dash = true;
     }
+    strokeWeight(1);
     line(lineXpos, height/4, lineXpos+dashedLaneGap, height/4);
   }
 }
@@ -210,6 +233,8 @@ void drawPedestrian() {
   //speed of pedestrian
   pedestrianSpeed = 3;                                              
   
+  fill(#C89DF7);
+  stroke(#8A09B2);
   rect(pedestrianRectX, pedestrianRectY, width/13.2, height/7);
   fill(0, 408, 612);
   textSize(width/80);
@@ -313,6 +338,7 @@ void gameOverScene() {
 //function to display game win scene when score reaches WIN_SCORE
 void gameWinScene() {
   if (winScore == WIN_SCORE) {
+    stroke(#8A09B2);
     fill(#92ED99);
     rect(0, 0, width, height);
     fill(#FA8A21);
@@ -329,18 +355,31 @@ void pedestrianReset() {
 }
 
 void debug() {
-  print("Positions: \n");
+  //if vehicles distance comes to SPEED_REDUCTION_DISTANCE, display the guage
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {
-      print(vehicleXpos[i][k] + " ");
+      //cease loop when it comes to the last element in that lane
+      if (k == vehicleXpos[i].length - 1) {
+        break;
+      } else { 
+        if(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) < SPEED_REDUCTION_DISTANCE) {
+          colorMode(HSB); 
+
+          stroke(gaugeColour, 99, 99);
+          strokeWeight(3);
+          line(vehicleXpos[i][k+1]+AABBwidth, vehicleYpos[i]+height/40, vehicleXpos[i][k] + (width/32 - width/27), vehicleYpos[i]+height/40);
+        
+          fill(#47FF00);
+          textSize(10);
+          float textWidth = textWidth("00");
+          text(int(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth)), vehicleXpos[i][k+1] + AABBwidth + ((abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth))/2) - textWidth/2 - width/200, vehicleYpos[i] + AABBheight/2 + height/300);           
+          //guage colour 2d for each vehicle 
+          
+          if(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) <= MIN_GAP) {
+            //2d stroke to background colour
+          }
+        }
+      }
     }
-    print("\n");
   }
-  print("Initial Velocity: \n");
-  for (int i = 0; i < N_LANES; i++) {
-    for (int k = 0; k < N_CARS_IN_LANE; k++) {
-      print(vehicleVelocity[i][k] + " ");
-    }
-    print("\n");
-  }
-}
+} 
