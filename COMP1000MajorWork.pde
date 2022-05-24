@@ -4,8 +4,8 @@
 
 final int N_LANES = 2;
 final int N_CARS_IN_LANE = 10;
-final int SPEED_REDUCTION_DISTANCE = 99;
-final int MIN_GAP = 30;
+final int SPEED_REDUCTION_DISTANCE = 120;
+final int MIN_GAP = 50;
 final int MAX_LIVES = 3;
 final int WIN_SCORE = 3;
 final int FRAME_RATE = 60;
@@ -65,7 +65,7 @@ void draw() {
   pedestrianUpdate();
   drawLane();
   scoreCalculator();
-//  collisionDetection();
+  collisionDetection();
   gameOverScene();
   gameWinScene();
 }
@@ -97,10 +97,11 @@ void assignYpos() {
 void assignVelocity() {
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {
-      //for the first vehicle 
+      //velocity for the first vehicle 
       if (k == 0){
         vehicleVelocity[i][k] = random(3, 5);
       } else {
+        //veclocity for the second vehicle onwards
         vehicleVelocity[i][k] = random(3, 8);
       }
     }
@@ -181,32 +182,12 @@ void speedReduction() {
           
           if(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) <= MIN_GAP) {
             vehicleVelocity[i][k+1] = vehicleVelocity[i][k];
-          }
-          
+          }          
         }
       }
     }
   }
 }
-
-//void drawGauge() {
-//  background(150);
-//  for (int i = 0; i < N_LANES; i++) {
-//    for (int k = 0; k < N_CARS_IN_LANE; k++) {
-//      //cease loop when it comes to the last element in that lane
-//      if (k == vehicleXpos[i].length - 1) {
-//        break;
-//      } else {
-//        fill(#47FF00);
-//        line(vehicleXpos[i][k], vehicleYpos[i]+AABBheight/2, vehicleXpos[i][k+1]+AABBwidth, vehicleYpos[i]+AABBheight/2);
-        
-//        textSize(50);
-//        float textWidth = textWidth("00");
-//        text((abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth)),  vehicleXpos[i][k+1]+AABBwidth + ((abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth))/2) - textWidth/2, vehicleYpos[i] + AABBheight/2 + height/90);      
-//      }
-//    }
-//  }
-//}
 
 //function to draw dashed lane
 void drawLane() {
@@ -286,22 +267,26 @@ void keyReleased() {
   }
 }
 
-//void collisionDetection() {
-//  AABBx = vehicleXpos - (width/32-width/37);
-//  AABBy = bodyY1 - (height/12 - height/18);
+void collisionDetection() {
+  for (int i = 0; i < N_LANES; i++) {
+    for (int k = 0; k < N_CARS_IN_LANE; k++) {  
+      AABBx = vehicleXpos[i][k] - (width/32-width/37);
+      AABBy = vehicleYpos[i] - (height/12 - height/18);
   
-//  //in pedestrian's perspective
-//  //left to right collisioin
-//  if (pedestrianRectX + pedestrianWidth > AABBx
-//  //right to left collision
-//  && pedestrianRectX < AABBx + AABBwidth 
-//  //bottom to top collison
-//  && pedestrianRectY + pedestrianHeight > AABBy 
-//  //top to bottom collison
-//  && pedestrianRectY < AABBy + AABBheight) {
-//    collided = true;
-//  }
-//}
+      //in pedestrian's perspective
+      //left to right collisioin
+      if (pedestrianRectX + pedestrianWidth > AABBx
+      //right to left collision
+      && pedestrianRectX < AABBx + AABBwidth 
+      //bottom to top collison
+      && pedestrianRectY + pedestrianHeight > AABBy 
+      //top to bottom collison
+      && pedestrianRectY < AABBy + AABBheight) {
+        collided = true;
+      }
+    }
+  }
+}
 
 //function to calculate the score and life 
 void scoreCalculator() {
