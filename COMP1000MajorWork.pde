@@ -2,7 +2,7 @@
 //[√] I declare that I have not seen anyone else's code
 //[√] I declare that I haven't shown my code to anyone else.
 
-final int N_LANES = 2;
+final int N_LANES = 5;
 final int N_CARS_IN_LANE = 10;
 final int SPEED_REDUCTION_DISTANCE = 120;
 final int MIN_GAP = 50;
@@ -29,7 +29,7 @@ boolean collided = false;
 void setup() {
   size(1200, 400);
   frameRate(FRAME_RATE);
-  laneGap = height/12;
+  laneGap = height/8;
   initialVehicleYpos = height/20;
   
   //vehicle position
@@ -89,7 +89,7 @@ void assignXpositions() {
 void assignYpos() {
   for (int i = 0; i < N_LANES; i++) {
     vehicleYpos[i] = initialVehicleYpos;
-    initialVehicleYpos += initialVehicleYpos + laneGap;
+    initialVehicleYpos += laneGap;
   }
 }
 
@@ -212,7 +212,7 @@ void drawLane() {
 //function to display the pedestrian 
 void drawPedestrian() {
   //speed of pedestrian
-  pedestrianSpeed = 3;                                              
+  pedestrianSpeed = 4;                                              
   
   fill(#C89DF7);
   stroke(#8A09B2);
@@ -249,12 +249,12 @@ void keyPressed() {
     isRight = true;
   }
   if (key == 'W' || key =='w') {
-    pedestrianRectY-= height/4;
-    pedestrianTextY-= height/4;
+    pedestrianRectY-= laneGap;
+    pedestrianTextY-= laneGap;
   }
   if (key == 'S' || key == 's') {
-    pedestrianRectY+= height/4;
-    pedestrianTextY+= height/4;
+    pedestrianRectY+= laneGap;
+    pedestrianTextY+= laneGap;
   }
 }
 
@@ -347,9 +347,9 @@ void debug() {
       if (k == vehicleXpos[i].length - 1) {
         break;
       } else { 
-        if(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) < SPEED_REDUCTION_DISTANCE) {
+        //IF (distance > SRD OR distance < MIN_GAP), do NOT display the gauge
+        if(!(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) > SPEED_REDUCTION_DISTANCE || (abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth)) <= MIN_GAP)) {
           colorMode(HSB); 
-
           stroke(gaugeColour, 99, 99);
           strokeWeight(3);
           line(vehicleXpos[i][k+1]+AABBwidth, vehicleYpos[i]+height/40, vehicleXpos[i][k] + (width/32 - width/27), vehicleYpos[i]+height/40);
