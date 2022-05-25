@@ -51,8 +51,6 @@ void setup() {
   assignXpositions();
   assignYpos();
   assignVelocity();  
-  
-
 }
 
 void draw() {
@@ -191,21 +189,23 @@ void speedReduction() {
 
 //function to draw dashed lane
 void drawLane() {
+  for (int i = 0; i < N_LANES; i++) {  
     float dashedLaneGap = width/24;
     boolean dash = true;
     //first line starts at x position 0
     //as long as line x position is within the screen width, draw dashed line
     //draw black line and then background colour line
     for (int lineXpos = 0; lineXpos <= width; lineXpos += dashedLaneGap) {
-    if(dash){
-      stroke(0);
-      dash = false;
-    } else {
-      stroke(150);
-      dash = true;
+      if(dash){
+        stroke(0);
+        dash = false;
+      } else {
+        stroke(150);
+        dash = true;
+      }
+      strokeWeight(1);
+      line(lineXpos, vehicleYpos[i]+height/11, lineXpos+dashedLaneGap, vehicleYpos[i]+height/11);
     }
-    strokeWeight(1);
-    line(lineXpos, height/4, lineXpos+dashedLaneGap, height/4);
   }
 }
 
