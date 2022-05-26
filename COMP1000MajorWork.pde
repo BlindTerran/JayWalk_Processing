@@ -2,7 +2,7 @@
 //[√] I declare that I have not seen anyone else's code
 //[√] I declare that I haven't shown my code to anyone else.
 
-final int N_LANES = 3;
+final int N_LANES = 2;
 final int N_CARS_IN_LANE = 10;
 final int SPEED_REDUCTION_DISTANCE = 120;
 final int MIN_GAP = 50;
@@ -40,10 +40,10 @@ void setup() {
 
   
   //collider porperty
-  AABBwidth = width/27 + width/50;
+  AABBwidth = 4*(width/27 + width/50)/N_LANES;
   AABBheight = 4*(height/6 - height/18)/N_LANES;
-  pedestrianWidth = width/13.2;
-  pedestrianHeight = height/7;
+  pedestrianWidth = 4*(width/13.2)/N_LANES;
+  pedestrianHeight = 4*(height/9)/N_LANES;
   
   assignVehicleXpos();
   assignVhicleYpos();
@@ -142,17 +142,17 @@ void drawVehicle() {
       strokeWeight(1);
       //nose cone
       fill(#DE4881);
-      ellipse(vehicleXpos[i][k]+width/27, vehicleYpos[i]+4*(height/40)/N_LANES, width/25, 4*(height/20)/N_LANES); 
+      ellipse(vehicleXpos[i][k]+4*(width/27)/N_LANES, vehicleYpos[i]+4*(height/40)/N_LANES, 4*(width/25)/N_LANES, 4*(height/20)/N_LANES); 
       //blast
       fill(150);
-      quad(vehicleXpos[i][k] - 5*width/1184, vehicleYpos[i]+4*(height/84)/N_LANES, vehicleXpos[i][k], vehicleYpos[i], vehicleXpos[i][k], vehicleYpos[i]+4*(height/20)/N_LANES, vehicleXpos[i][k] - 5*width/1184, vehicleYpos[i]+(4*(7*height/204)/N_LANES));           
+      quad(vehicleXpos[i][k] - 4*(5*width/1184)/N_LANES, vehicleYpos[i]+4*(height/84)/N_LANES, vehicleXpos[i][k], vehicleYpos[i], vehicleXpos[i][k], vehicleYpos[i]+4*(height/20)/N_LANES, vehicleXpos[i][k] - 4*(5*width/1184)/N_LANES, vehicleYpos[i]+(4*(7*height/204)/N_LANES));           
       //upper surface
-      quad(vehicleXpos[i][k]+width/224, vehicleYpos[i]-4*(height/36)/N_LANES, vehicleXpos[i][k]+7*width/800, vehicleYpos[i]-4*(height/36)/N_LANES, vehicleXpos[i][k]+3*width/160, vehicleYpos[i], vehicleXpos[i][k]+5*width/864, vehicleYpos[i]);       
+      quad(vehicleXpos[i][k]+4*(width/224)/N_LANES, vehicleYpos[i]-4*(height/36)/N_LANES, vehicleXpos[i][k]+4*(7*width/800)/N_LANES, vehicleYpos[i]-4*(height/36)/N_LANES, vehicleXpos[i][k]+4*(3*width/160)/N_LANES, vehicleYpos[i], vehicleXpos[i][k]+4*(5*width/864)/N_LANES, vehicleYpos[i]);       
       //lower surface
-      quad(vehicleXpos[i][k]+width/224, vehicleYpos[i]+4*(height/12)/N_LANES, vehicleXpos[i][k]+7*width/800, vehicleYpos[i]+4*(height/12)/N_LANES, vehicleXpos[i][k]+3*width/160, vehicleYpos[i]+4*(height/20)/N_LANES, vehicleXpos[i][k]+5*width/864, vehicleYpos[i]+4*(height/20)/N_LANES);  
+      quad(vehicleXpos[i][k]+4*(width/224)/N_LANES, vehicleYpos[i]+4*(height/12)/N_LANES, vehicleXpos[i][k]+4*(7*width/800)/N_LANES, vehicleYpos[i]+4*(height/12)/N_LANES, vehicleXpos[i][k]+4*(3*width/160)/N_LANES, vehicleYpos[i]+4*(height/20)/N_LANES, vehicleXpos[i][k]+4*(5*width/864)/N_LANES, vehicleYpos[i]+4*(height/20)/N_LANES);  
       //body
       fill(#518B01);
-      rect(vehicleXpos[i][k], vehicleYpos[i], width/27, 4*(height/20)/N_LANES);                                                                                        
+      rect(vehicleXpos[i][k], vehicleYpos[i], 4*(width/27)/N_LANES, 4*(height/20)/N_LANES);                                                                                        
     }
   }
 }
@@ -223,9 +223,9 @@ void drawPedestrian() {
   
   fill(#C89DF7);
   stroke(#8A09B2);
-  rect(pedestrianRectX, pedestrianRectY, width/13.2, laneGap-(height/10)/N_LANES);
+  rect(pedestrianRectX, pedestrianRectY, pedestrianWidth, pedestrianHeight);
   fill(0, 408, 612);
-  textSize(width/80);
+  textSize(4*(width/80)/N_LANES);
   text("PEDESTRIAN", pedestrianTextX, pedestrianTextY);
 }
 
@@ -277,7 +277,7 @@ void keyReleased() {
 void collisionDetection() {
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {  
-      AABBx = vehicleXpos[i][k] - (width/32-width/37);
+      AABBx = vehicleXpos[i][k] - 4*(width/32-width/37)/N_LANES;
       AABBy = vehicleYpos[i] - 4*(height/12 - height/18)/N_LANES;
   
       //in pedestrian's perspective
@@ -310,7 +310,8 @@ void scoreCalculator() {
     //reset the pedestrian when collided
     assignPedestrianPos();
   }
-  
+  fill(#4171F0);
+  textSize(20);
   text("SCORE: "+winScore+" | "+"LIFE LEFT: "+lifeLeft, width*0.7, height*0.98);
 }
 
@@ -352,12 +353,12 @@ void gauge() {
           colorMode(HSB); 
           stroke(gaugeColour, 99, 99);
           strokeWeight(3);
-          line(vehicleXpos[i][k+1]+AABBwidth, vehicleYpos[i]+4*(height/40)/N_LANES, vehicleXpos[i][k] + (width/32 - width/27), vehicleYpos[i]+4*(height/40)/N_LANES);
+          line(vehicleXpos[i][k+1]+AABBwidth, vehicleYpos[i]+4*(height/40)/N_LANES, vehicleXpos[i][k] + 4*(width/32 - width/27)/N_LANES, vehicleYpos[i]+4*(height/40)/N_LANES);
         
           fill(#47FF00);
           textSize(10);
           float textWidth = textWidth("00");
-          text(int(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth)), vehicleXpos[i][k+1] + AABBwidth + ((abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth))/2) - textWidth/2 - width/200, vehicleYpos[i] + AABBheight/2 + 4*(height/300)/N_LANES);           
+          text(int(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth)), vehicleXpos[i][k+1] + AABBwidth + ((abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth))/2) - textWidth/2 - 4*(width/200)/N_LANES, vehicleYpos[i] + AABBheight/2 + 4*(height/300)/N_LANES);           
           //guage colour 2d for each vehicle 
           
           if(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) <= MIN_GAP) {
