@@ -2,7 +2,7 @@
 //[√] I declare that I have not seen anyone else's code
 //[√] I declare that I haven't shown my code to anyone else.
 
-final int N_LANES = 5;
+final int N_LANES = 4;
 final int N_CARS_IN_LANE = 10;
 final int SPEED_REDUCTION_DISTANCE = 120;
 final int MIN_GAP = 50;
@@ -29,8 +29,8 @@ boolean collided = false;
 void setup() {
   size(1200, 400);
   frameRate(FRAME_RATE);
-  laneGap = height/8;
-  initialVehicleYpos = height/20;
+  laneGap = 4*(height/8) / N_LANES;
+  initialVehicleYpos = 4*(height/20) / N_LANES;
   
   //vehicle position
   vehicleXpos = new float [N_LANES][N_CARS_IN_LANE]; 
@@ -50,14 +50,15 @@ void setup() {
   
   assignXpositions();
   assignYpos();
-  assignVelocity();  
+  assignVelocity(); 
+  debug();
 }
 
 void draw() {
   drawVehicle();
   vehicleUpdate();
   speedReduction();
-  debug();
+  gauge();
   vehicleReset();
   drawPedestrian();
   pedestrianUpdate();
@@ -135,17 +136,17 @@ void drawVehicle() {
       strokeWeight(1);
       //nose cone
       fill(#DE4881);
-      ellipse(vehicleXpos[i][k]+width/27, vehicleYpos[i]+height/40, width/25, height/20); 
+      ellipse(vehicleXpos[i][k]+width/27, vehicleYpos[i]+4*(height/40)/N_LANES, width/25, 4*(height/20)/N_LANES); 
       //blast
       fill(150);
-      quad(vehicleXpos[i][k] - 5*width/1184, vehicleYpos[i]+height/84, vehicleXpos[i][k], vehicleYpos[i], vehicleXpos[i][k], vehicleYpos[i]+height/20, vehicleXpos[i][k] - 5*width/1184, vehicleYpos[i]+7*height/204);           
+      quad(vehicleXpos[i][k] - 5*width/1184, vehicleYpos[i]+4*(height/84)/N_LANES, vehicleXpos[i][k], vehicleYpos[i], vehicleXpos[i][k], vehicleYpos[i]+4*(height/20)/N_LANES, vehicleXpos[i][k] - 5*width/1184, vehicleYpos[i]+(4*(7*height/204)/N_LANES));           
       //upper surface
-      quad(vehicleXpos[i][k]+width/224, vehicleYpos[i]-height/36, vehicleXpos[i][k]+7*width/800, vehicleYpos[i]-height/36, vehicleXpos[i][k]+3*width/160, vehicleYpos[i], vehicleXpos[i][k]+5*width/864, vehicleYpos[i]);       
+      quad(vehicleXpos[i][k]+width/224, vehicleYpos[i]-4*(height/36)/N_LANES, vehicleXpos[i][k]+7*width/800, vehicleYpos[i]-4*(height/36)/N_LANES, vehicleXpos[i][k]+3*width/160, vehicleYpos[i], vehicleXpos[i][k]+5*width/864, vehicleYpos[i]);       
       //lower surface
-      quad(vehicleXpos[i][k]+width/224, vehicleYpos[i]+height/12, vehicleXpos[i][k]+7*width/800, vehicleYpos[i]+height/12, vehicleXpos[i][k]+3*width/160, vehicleYpos[i]+height/20, vehicleXpos[i][k]+5*width/864, vehicleYpos[i]+height/20);  
+      quad(vehicleXpos[i][k]+width/224, vehicleYpos[i]+4*(height/12)/N_LANES, vehicleXpos[i][k]+7*width/800, vehicleYpos[i]+4*(height/12)/N_LANES, vehicleXpos[i][k]+3*width/160, vehicleYpos[i]+4*(height/20)/N_LANES, vehicleXpos[i][k]+5*width/864, vehicleYpos[i]+4*(height/20)/N_LANES);  
       //body
       fill(#518B01);
-      rect(vehicleXpos[i][k], vehicleYpos[i], width/27, height/20);                                                                                        
+      rect(vehicleXpos[i][k], vehicleYpos[i], width/27, 4*(height/20)/N_LANES);                                                                                        
     }
   }
 }
@@ -204,7 +205,7 @@ void drawLane() {
         dash = true;
       }
       strokeWeight(1);
-      line(lineXpos, vehicleYpos[i]+height/11, lineXpos+dashedLaneGap, vehicleYpos[i]+height/11);
+      line(lineXpos, vehicleYpos[i]+(4*height/11)/N_LANES, lineXpos+dashedLaneGap, vehicleYpos[i]+(4*height/11)/N_LANES);
     }
   }
 }
@@ -249,12 +250,12 @@ void keyPressed() {
     isRight = true;
   }
   if (key == 'W' || key =='w') {
-    pedestrianRectY-= laneGap;
-    pedestrianTextY-= laneGap;
+    pedestrianRectY -= laneGap;
+    pedestrianTextY -= laneGap;
   }
   if (key == 'S' || key == 's') {
-    pedestrianRectY+= laneGap;
-    pedestrianTextY+= laneGap;
+    pedestrianRectY += laneGap;
+    pedestrianTextY += laneGap;
   }
 }
 
@@ -339,7 +340,7 @@ void pedestrianReset() {
   pedestrianTextY = height/1.06 - height/20;
 }
 
-void debug() {
+void gauge() {
   //if vehicles distance comes to SPEED_REDUCTION_DISTANCE, display the guage
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {
@@ -368,3 +369,9 @@ void debug() {
     }
   }
 } 
+
+void debug() {
+  for (int i = 0; i < N_LANES; i++) {
+    print(vehicleYpos[i] + "|");
+  }
+}
