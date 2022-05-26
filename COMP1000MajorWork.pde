@@ -2,7 +2,7 @@
 //[√] I declare that I have not seen anyone else's code
 //[√] I declare that I haven't shown my code to anyone else.
 
-final int N_LANES = 5;
+final int N_LANES = 3;
 final int N_CARS_IN_LANE = 10;
 final int SPEED_REDUCTION_DISTANCE = 120;
 final int MIN_GAP = 50;
@@ -41,7 +41,7 @@ void setup() {
   
   //collider porperty
   AABBwidth = width/27 + width/50;
-  AABBheight = height/6 - height/18;
+  AABBheight = 4*(height/6 - height/18)/N_LANES;
   pedestrianWidth = width/13.2;
   pedestrianHeight = height/7;
   
@@ -278,7 +278,7 @@ void collisionDetection() {
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {  
       AABBx = vehicleXpos[i][k] - (width/32-width/37);
-      AABBy = vehicleYpos[i] - (height/12 - height/18);
+      AABBy = vehicleYpos[i] - 4*(height/12 - height/18)/N_LANES;
   
       //in pedestrian's perspective
       //left to right collisioin
@@ -352,12 +352,12 @@ void gauge() {
           colorMode(HSB); 
           stroke(gaugeColour, 99, 99);
           strokeWeight(3);
-          line(vehicleXpos[i][k+1]+AABBwidth, vehicleYpos[i]+height/40, vehicleXpos[i][k] + (width/32 - width/27), vehicleYpos[i]+height/40);
+          line(vehicleXpos[i][k+1]+AABBwidth, vehicleYpos[i]+4*(height/40)/N_LANES, vehicleXpos[i][k] + (width/32 - width/27), vehicleYpos[i]+4*(height/40)/N_LANES);
         
           fill(#47FF00);
           textSize(10);
           float textWidth = textWidth("00");
-          text(int(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth)), vehicleXpos[i][k+1] + AABBwidth + ((abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth))/2) - textWidth/2 - width/200, vehicleYpos[i] + AABBheight/2 + height/300);           
+          text(int(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth)), vehicleXpos[i][k+1] + AABBwidth + ((abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth))/2) - textWidth/2 - width/200, vehicleYpos[i] + AABBheight/2 + 4*(height/300)/N_LANES);           
           //guage colour 2d for each vehicle 
           
           if(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) <= MIN_GAP) {
