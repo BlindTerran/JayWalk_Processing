@@ -2,12 +2,12 @@
 //[√] I declare that I have not seen anyone else's code
 //[√] I declare that I haven't shown my code to anyone else.
 
-final int N_LANES = 2;
+final int N_LANES = 5;
 final int N_CARS_IN_LANE = 10;
 final int SPEED_REDUCTION_DISTANCE = 120;
 final int MIN_GAP = 50;
-final int MAX_LIVES = 3;
-final int WIN_SCORE = 3;
+final int MAX_LIVES = 5;
+final int WIN_SCORE = 4;
 final int FRAME_RATE = 60;
 
 float[][] vehicleXpos;
@@ -219,7 +219,7 @@ void drawLane() {
 //function to display the pedestrian 
 void drawPedestrian() {
   //speed of pedestrian
-  pedestrianSpeed = 4;                                              
+  pedestrianSpeed = 6;                                              
   
   fill(#C89DF7);
   stroke(#8A09B2);
@@ -312,7 +312,7 @@ void scoreCalculator() {
   }
   fill(#4171F0);
   textSize(20);
-  text("SCORE: "+winScore+" | "+"LIFE LEFT: "+lifeLeft, width*0.7, height*0.98);
+  text("SCORE: " + winScore + "/" + WIN_SCORE + " | " + "LIFE LEFT: " + lifeLeft, width*0.7, height*0.98);
 }
 
 //function to display game over scene when lifeLeft reaches 0
