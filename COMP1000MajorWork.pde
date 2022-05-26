@@ -2,7 +2,7 @@
 //[√] I declare that I have not seen anyone else's code
 //[√] I declare that I haven't shown my code to anyone else.
 
-final int N_LANES = 4;
+final int N_LANES = 5;
 final int N_CARS_IN_LANE = 10;
 final int SPEED_REDUCTION_DISTANCE = 120;
 final int MIN_GAP = 50;
@@ -37,10 +37,7 @@ void setup() {
   vehicleYpos = new float [N_LANES];  
   vehicleVelocity = new float [N_LANES][N_CARS_IN_LANE];
   //pedestrian position
-  pedestrianRectX = width/1.85;
-  pedestrianRectY = height/1.16 - height/20;
-  pedestrianTextX = width/1.85;
-  pedestrianTextY = height/1.06 - height/20;
+
   
   //collider porperty
   AABBwidth = width/27 + width/50;
@@ -48,9 +45,10 @@ void setup() {
   pedestrianWidth = width/13.2;
   pedestrianHeight = height/7;
   
-  assignXpositions();
-  assignYpos();
-  assignVelocity(); 
+  assignVehicleXpos();
+  assignVhicleYpos();
+  assignVehicleVelocity(); 
+  assignPedestrianPos();
   debug();
 }
 
@@ -70,7 +68,7 @@ void draw() {
 }
 
 //2d array Xpositions, Row(i): lane; Colum(k): each vehicle's X position in that lane
-void assignXpositions() {
+void assignVehicleXpos() {
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {
       if (k == 0) {
@@ -85,7 +83,7 @@ void assignXpositions() {
   }
 }
 
-void assignYpos() {
+void assignVhicleYpos() {
   for (int i = 0; i < N_LANES; i++) {
     vehicleYpos[i] = initialVehicleYpos;
     initialVehicleYpos += laneGap;
@@ -93,7 +91,7 @@ void assignYpos() {
 }
 
 //2d array vehicleVelocity, Row(i): lane; Colum(k): each vehicle's velocity in that lane
-void assignVelocity() {
+void assignVehicleVelocity() {
   for (int i = 0; i < N_LANES; i++) {
     for (int k = 0; k < N_CARS_IN_LANE; k++) {
       //velocity for the first vehicle 
@@ -105,6 +103,13 @@ void assignVelocity() {
       }
     }
   }
+}
+
+void assignPedestrianPos() {
+  pedestrianRectX = width/1.85;
+  pedestrianRectY = height - laneGap + (height/11)/N_LANES;
+  pedestrianTextX = width/1.85;
+  pedestrianTextY = height - laneGap + (height/3)/N_LANES;
 }
 
 void vehicleReset() {
@@ -126,6 +131,7 @@ void vehicleReset() {
     }
   }
 }
+
 
 void drawVehicle() {
   background(150);
@@ -217,7 +223,7 @@ void drawPedestrian() {
   
   fill(#C89DF7);
   stroke(#8A09B2);
-  rect(pedestrianRectX, pedestrianRectY, width/13.2, height/7);
+  rect(pedestrianRectX, pedestrianRectY, width/13.2, laneGap-(height/10)/N_LANES);
   fill(0, 408, 612);
   textSize(width/80);
   text("PEDESTRIAN", pedestrianTextX, pedestrianTextY);
@@ -295,14 +301,14 @@ void scoreCalculator() {
     winScore++;
     
     //reset the pedestrian when crosssed the lane
-    pedestrianReset();
+    assignPedestrianPos();
   }
   if(collided) {
     lifeLeft-= 1;
     collided = false;
     
     //reset the pedestrian when collided
-    pedestrianReset();
+    assignPedestrianPos();
   }
   
   text("SCORE: "+winScore+" | "+"LIFE LEFT: "+lifeLeft, width*0.7, height*0.98);
@@ -331,13 +337,6 @@ void gameWinScene() {
     textSize(80);
     text("YOU WIN!", width*0.33, 11*width/60);
   }
-}
-
-void pedestrianReset() {
-  pedestrianRectX = width/1.85;
-  pedestrianRectY = height/1.16 - height/20;
-  pedestrianTextX = width/1.85;
-  pedestrianTextY = height/1.06 - height/20;
 }
 
 void gauge() {
