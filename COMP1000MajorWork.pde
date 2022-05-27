@@ -5,9 +5,9 @@
 final int N_LANES = 5;
 final int N_CARS_IN_LANE = 10;
 final int SPEED_REDUCTION_DISTANCE = 120;
-final int MIN_GAP = 50;
+final int MIN_GAP = 40;
 final int MAX_LIVES = 5;
-final int WIN_SCORE = 4;
+final int WIN_SCORE = 3;
 final int FRAME_RATE = 60;
 
 float[][] vehicleXpos;
@@ -40,8 +40,8 @@ void setup() {
   vehicleVelocity = new float [N_LANES][N_CARS_IN_LANE];
 
   //collider porperty
-  AABBwidth = 4*(width/27 + width/50)/N_LANES;
-  AABBheight = 4*(height/6 - height/18)/N_LANES;
+  AABBwidth = 4*(width/27+width/50-5*width/1184)/N_LANES;
+  AABBheight = 4*(height/6-height/18)/N_LANES;
   pedestrianWidth = 4*(width/13.2)/N_LANES;
   pedestrianHeight = 4*(height/9)/N_LANES;
   pedestrianSpeed = 6;                                              
@@ -57,7 +57,7 @@ void draw() {
   drawVehicle();
   vehicleUpdate();
   vehicleDeceleration();
-//  gauge();
+  gauge();
   vehicleReset();
   drawPedestrian();
   pedestrianUpdate();
@@ -238,7 +238,7 @@ void vehicleDeceleration() {
       } else {
         
         //when the distance between two vehicles on the same lane less than SPEED_REDUCTION_DISTANCE
-        if(abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth) < SPEED_REDUCTION_DISTANCE) {      
+        if ((vehicleXpos[laneN][vehicleN] - vehicleXpos[laneN][vehicleN+1] - AABBwidth) < SPEED_REDUCTION_DISTANCE) {      
           
           //deceleration rate
           deceleration = -0.01;        
@@ -247,9 +247,12 @@ void vehicleDeceleration() {
           vehicleVelocity[laneN][vehicleN+1] = vehicleVelocity[laneN][vehicleN+1] + deceleration; 
           
           //match the front vehicle when distance comes to MIN_GAP
-          if(abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth) <= MIN_GAP) {
+          if ((vehicleXpos[laneN][vehicleN] - vehicleXpos[laneN][vehicleN+1] - AABBwidth) <= MIN_GAP) {
             vehicleVelocity[laneN][vehicleN+1] = vehicleVelocity[laneN][vehicleN];
-          }          
+          }
+          if (vehicleVelocity[laneN][vehicleN] < 0) {
+            vehicleVelocity[laneN][vehicleN] = abs(vehicleVelocity[laneN][vehicleN]);
+          }
         }
       }
     }
@@ -382,7 +385,8 @@ void gauge() {
         break;
       } else { 
         //IF (distance > SRD OR distance < MIN_GAP), do NOT display the gauge
-        if(!(abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth) > SPEED_REDUCTION_DISTANCE || (abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth)) <= MIN_GAP)) {
+        //if(!(abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth) > SPEED_REDUCTION_DISTANCE || (abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth)) <= MIN_GAP))
+        if((vehicleXpos[laneN][vehicleN] - vehicleXpos[laneN][vehicleN+1] - AABBwidth) < SPEED_REDUCTION_DISTANCE) {
           colorMode(HSB); 
           stroke(gaugeColour, 99, 99);
           strokeWeight(3);
@@ -391,7 +395,7 @@ void gauge() {
           fill(#47FF00);
           textSize(10);
           float textWidth = textWidth("00");
-          text(int(abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth)), vehicleXpos[laneN][vehicleN+1] + AABBwidth + ((abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth))/2) - textWidth/2 - 4*(width/200)/N_LANES, vehicleYpos[laneN] + AABBheight/2 + 4*(height/300)/N_LANES);           
+          text(int(vehicleXpos[laneN][vehicleN] - vehicleXpos[laneN][vehicleN+1] - AABBwidth), vehicleXpos[laneN][vehicleN+1] + AABBwidth + ((abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth))/2) - textWidth/2 - 4*(width/200)/N_LANES, vehicleYpos[laneN] + AABBheight/2 + 4*(height/300)/N_LANES);           
           //guage colour 2d for each vehicle 
           
           if(abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth) <= MIN_GAP) {
