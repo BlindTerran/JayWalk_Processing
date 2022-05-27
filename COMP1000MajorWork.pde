@@ -57,7 +57,6 @@ void draw() {
   drawVehicle();
   vehicleUpdate();
   vehicleDeceleration();
-  gauge();
   vehicleReset();
   drawPedestrian();
   pedestrianUpdate();
@@ -128,7 +127,7 @@ void vehicleReset() {
       
       //regenerate the Xpositions and reassign their velocities in that spcific lane
       for (int vehicleN = 0; vehicleN < N_CARS_IN_LANE; vehicleN++) {
-        if(vehicleN == 0) {
+        if (vehicleN == 0) {
           vehicleXpos[laneN][vehicleN] = random(-20) - AABBwidth;
           vehicleVelocity[laneN][vehicleN] = random(3, 5);
         } else {
@@ -189,7 +188,7 @@ void drawLane() {
     //as long as line x position is within the screen width, draw dashed line
     //draw black line and then background colour line
     for (int lineXpos = 0; lineXpos <= width; lineXpos += dashedLaneGap) {
-      if(dash){
+      if (dash){
         stroke(0);
         dash = false;
       } else {
@@ -327,7 +326,7 @@ void keyReleased() {
 void scoreCalculator() {
   
   //if pedestrian successfully cross the finish line (Y=0), increment the score
-  if(pedestrianRectY <= 0) {
+  if (pedestrianRectY <= 0) {
     winScore++;
     
     //reset the pedestrian when crosssed the finish liine
@@ -335,7 +334,7 @@ void scoreCalculator() {
   }
   
   //if pedestrian collided with vehicle, deduct the life
-  if(collided) {
+  if (collided) {
     lifeLeft-= 1;
     collided = false;
     
@@ -375,34 +374,3 @@ void gameWinScene() {
     noLoop();
   }
 }
-
-void gauge() {
-  //if vehicles distance comes to SPEED_REDUCTION_DISTANCE, display the guage
-  for (int laneN = 0; laneN < N_LANES; laneN++) {
-    for (int vehicleN = 0; vehicleN < N_CARS_IN_LANE; vehicleN++) {
-      //cease loop when it comes to the last element in that lane
-      if (vehicleN == vehicleXpos[laneN].length - 1) {
-        break;
-      } else { 
-        //IF (distance > SRD OR distance < MIN_GAP), do NOT display the gauge
-        //if(!(abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth) > SPEED_REDUCTION_DISTANCE || (abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth)) <= MIN_GAP))
-        if((vehicleXpos[laneN][vehicleN] - vehicleXpos[laneN][vehicleN+1] - AABBwidth) < SPEED_REDUCTION_DISTANCE) {
-          colorMode(HSB); 
-          stroke(gaugeColour, 99, 99);
-          strokeWeight(3);
-          line(vehicleXpos[laneN][vehicleN+1]+AABBwidth, vehicleYpos[laneN]+4*(height/40)/N_LANES, vehicleXpos[laneN][vehicleN] + 4*(width/32 - width/27)/N_LANES, vehicleYpos[laneN]+4*(height/40)/N_LANES);
-        
-          fill(#47FF00);
-          textSize(10);
-          float textWidth = textWidth("00");
-          text(int(vehicleXpos[laneN][vehicleN] - vehicleXpos[laneN][vehicleN+1] - AABBwidth), vehicleXpos[laneN][vehicleN+1] + AABBwidth + ((abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth))/2) - textWidth/2 - 4*(width/200)/N_LANES, vehicleYpos[laneN] + AABBheight/2 + 4*(height/300)/N_LANES);           
-          //guage colour 2d for each vehicle 
-          
-          if(abs(vehicleXpos[laneN][vehicleN+1] - vehicleXpos[laneN][vehicleN] + AABBwidth) <= MIN_GAP) {
-            //2d stroke to background colour
-          }
-        }
-      }
-    }
-  }
-} 
