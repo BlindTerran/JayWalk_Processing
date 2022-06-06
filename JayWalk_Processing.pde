@@ -2,7 +2,7 @@
 //[√] I declare that I have not seen anyone else's code
 //[√] I declare that I haven't shown my code to anyone else.
 
-final int N_LANES = 3;
+final int N_LANES = 5;
 final int N_CARS_IN_LANE = 10;
 final int SPEED_REDUCTION_DISTANCE = 120;
 final int MIN_GAP = 40;
@@ -40,7 +40,7 @@ void setup() {
   vehicleVelocity = new float [N_LANES][N_CARS_IN_LANE];
 
   //collider porperty
-  AABBwidth = 4*(width/27+width/50-5*width/1184)/N_LANES;
+  AABBwidth = 4*(width/27)/N_LANES;
   AABBheight = 4*(height/6-height/18)/N_LANES;
   pedestrianWidth = 4*(width/13.2)/N_LANES;
   pedestrianHeight = 4*(height/9)/N_LANES;
@@ -57,6 +57,7 @@ void draw() {
   drawVehicle();
   vehicleUpdate();
   vehicleDeceleration();
+  debug();
   vehicleReset();
   drawPedestrian();
   pedestrianUpdate();
@@ -148,21 +149,6 @@ void drawVehicle() {
   for (int laneN = 0; laneN < N_LANES; laneN++) {
     for (int vehicleN = 0; vehicleN < N_CARS_IN_LANE; vehicleN++) {
       strokeWeight(1);
-      
-      //nose cone
-      fill(#DE4881);
-      ellipse(vehicleXpos[laneN][vehicleN]+4*(width/27)/N_LANES, vehicleYpos[laneN]+4*(height/40)/N_LANES, 4*(width/25)/N_LANES, 4*(height/20)/N_LANES); 
-      
-      //blast
-      fill(150);
-      quad(vehicleXpos[laneN][vehicleN]-4*(5*width/1184)/N_LANES, vehicleYpos[laneN]+4*(height/84)/N_LANES, vehicleXpos[laneN][vehicleN], vehicleYpos[laneN], vehicleXpos[laneN][vehicleN], vehicleYpos[laneN]+4*(height/20)/N_LANES, vehicleXpos[laneN][vehicleN] - 4*(5*width/1184)/N_LANES, vehicleYpos[laneN]+(4*(7*height/204)/N_LANES));           
-      
-      //upper surface
-      quad(vehicleXpos[laneN][vehicleN]+4*(width/224)/N_LANES, vehicleYpos[laneN]-4*(height/36)/N_LANES, vehicleXpos[laneN][vehicleN]+4*(7*width/800)/N_LANES, vehicleYpos[laneN]-4*(height/36)/N_LANES, vehicleXpos[laneN][vehicleN]+4*(3*width/160)/N_LANES, vehicleYpos[laneN], vehicleXpos[laneN][vehicleN]+4*(5*width/864)/N_LANES, vehicleYpos[laneN]);       
-      
-      //lower surface
-      quad(vehicleXpos[laneN][vehicleN]+4*(width/224)/N_LANES, vehicleYpos[laneN]+4*(height/12)/N_LANES, vehicleXpos[laneN][vehicleN]+4*(7*width/800)/N_LANES, vehicleYpos[laneN]+4*(height/12)/N_LANES, vehicleXpos[laneN][vehicleN]+4*(3*width/160)/N_LANES, vehicleYpos[laneN]+4*(height/20)/N_LANES, vehicleXpos[laneN][vehicleN]+4*(5*width/864)/N_LANES, vehicleYpos[laneN]+4*(height/20)/N_LANES);  
-      
       //body
       fill(#518B01);
       rect(vehicleXpos[laneN][vehicleN], vehicleYpos[laneN], 4*(width/27)/N_LANES, 4*(height/20)/N_LANES);                                                                                        
@@ -374,3 +360,33 @@ void gameWinScene() {
     noLoop();
   }
 }
+
+void debug() {
+  //if vehicles distance comes to SPEED_REDUCTION_DISTANCE, display the guage
+  for (int i = 0; i < N_LANES; i++) {
+    for (int k = 0; k < N_CARS_IN_LANE; k++) {
+      //cease loop when it comes to the last element in that lane
+      if (k == vehicleXpos[i].length - 1) {
+        break;
+      } else { 
+        //IF (distance > SRD OR distance < MIN_GAP), do NOT display the gauge
+        if(!(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) > SPEED_REDUCTION_DISTANCE || (abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth)) <= MIN_GAP)) {
+          colorMode(HSB); 
+          stroke(gaugeColour, 99, 99);
+          strokeWeight(3);
+          line(vehicleXpos[i][k+1]+AABBwidth, vehicleYpos[i]+height/40, vehicleXpos[i][k] + (width/32 - width/27), vehicleYpos[i]+height/40);
+        
+          fill(#47FF00);
+          textSize(10);
+          float textWidth = textWidth("00");
+          text(int(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth)), vehicleXpos[i][k+1] + AABBwidth + ((abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth))/2) - textWidth/2 - width/200, vehicleYpos[i] + AABBheight/2 + height/300);           
+          //guage colour 2d for each vehicle 
+          
+          if(abs(vehicleXpos[i][k+1] - vehicleXpos[i][k] + AABBwidth) <= MIN_GAP) {
+            //2d stroke to background colour
+          }
+        }
+      }
+    }
+  }
+} 
