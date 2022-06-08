@@ -1,6 +1,4 @@
-//Hongting Su, 47382481
-//[√] I declare that I have not seen anyone else's code
-//[√] I declare that I haven't shown my code to anyone else.
+PImage bus;
 
 final int N_LANES = 5;
 final int N_CARS_IN_LANE = 10;
@@ -34,6 +32,9 @@ void setup() {
   laneGap = 4*(height/8)/N_LANES;
 
   //vehicle position
+  bus = loadImage("CarCollectionBus.png");
+  bus.resize(4*(width/27)/N_LANES, 4*(height/20)/N_LANES);
+  
   vehicleXpos = new float [N_LANES][N_CARS_IN_LANE]; 
   initialVehicleYpos = 4*(height/20)/N_LANES;
   vehicleYpos = new float [N_LANES];  
@@ -151,7 +152,7 @@ void drawVehicle() {
       strokeWeight(1);
       //body
       fill(#518B01);
-      rect(vehicleXpos[laneN][vehicleN], vehicleYpos[laneN], 4*(width/27)/N_LANES, 4*(height/20)/N_LANES);                                                                                        
+      image(bus, vehicleXpos[laneN][vehicleN], vehicleYpos[laneN]);                                                                                        
     }
   }
 }
