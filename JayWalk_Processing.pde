@@ -1,4 +1,4 @@
-PImage bus;
+PImage bus, ufo;
 
 final int N_LANES = 5;
 final int N_CARS_IN_LANE = 10;
@@ -43,7 +43,10 @@ void setup() {
   //collider porperty
   AABBwidth = 4*(width/27)/N_LANES;
   AABBheight = 4*(height/6-height/18)/N_LANES;
-  pedestrianWidth = 4*(width/13.2)/N_LANES;
+  
+  ufo = loadImage("little_ufo.png");
+  ufo.resize(4*(width/13)/N_LANES, 4*(height/9)/N_LANES);
+  pedestrianWidth = 4*(width/13)/N_LANES;
   pedestrianHeight = 4*(height/9)/N_LANES;
   pedestrianSpeed = 6;                                              
   
@@ -160,10 +163,7 @@ void drawVehicle() {
 void drawPedestrian() {  
   fill(#C89DF7);
   stroke(#8A09B2);
-  rect(pedestrianRectX, pedestrianRectY, pedestrianWidth, pedestrianHeight);
-  fill(0, 408, 612);
-  textSize(4*(width/80)/N_LANES);
-  text("PEDESTRIAN", pedestrianTextX, pedestrianTextY);
+  image(ufo, pedestrianRectX, pedestrianRectY);
 }
 
 void drawLane() {
