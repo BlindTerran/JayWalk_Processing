@@ -1,1 +1,2 @@
-"CarCollection" by Master484 licensed CC0 1.0: https://opengameart.org/content/basic-2d-car-collection
+"CarCollection" by Master484 licensed under CC0 1.0: https://opengameart.org/content/basic-2d-car-collection
+"little_ufo" by knik1985 licensed under CC-BY 3.0: https://opengameart.org/content/ufo-3, Changes made: trimed transparent pixels from the original file
